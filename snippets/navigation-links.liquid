@@ -1,4 +1,4 @@
-{%- comment -%}Nested Shopify menu links. Accepts links, variant, prefix.{%- endcomment -%}
+{%- comment -%}Nested menu links. Accepts links, variant ('header' or 'footer'), prefix.{%- endcomment -%}
 {%- for link in links -%}
   {%- assign item_id = prefix | append: '-' | append: forloop.index -%}
   <li class="{{ variant }}__menu-item">

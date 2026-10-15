@@ -32,38 +32,7 @@
               <ul class="footer__links">
                 {%- if fmenu != blank and fmenu.links.size > 0 -%}
                   {%- assign menu_prefix = 'FooterMenu-' | append: section.id | append: '-' | append: block.id -%}
-                  {%- for link in fmenu.links -%}
-                    {%- assign menu_item_id = menu_prefix | append: '-' | append: forloop.index -%}
-                    <li class="footer__menu-item">
-                      <div class="footer__menu-row">
-                        <a href="{{ link.url }}"{% if link.current %} aria-current="page"{% endif %}>{{ link.title | escape }}</a>
-                      </div>
-                      {%- if link.links.size > 0 -%}
-                        <ul class="footer__submenu" id="{{ menu_item_id }}">
-                          {%- for child_link in link.links -%}
-                            {%- assign child_item_id = menu_item_id | append: '-' | append: forloop.index -%}
-                            <li class="footer__menu-item">
-                              <div class="footer__menu-row">
-                                <a href="{{ child_link.url }}"{% if child_link.current %} aria-current="page"{% endif %}>{{ child_link.title | escape }}</a>
-                              </div>
-                              {%- if child_link.links.size > 0 -%}
-                                <ul class="footer__submenu" id="{{ child_item_id }}">
-                                  {%- for grandchild_link in child_link.links -%}
-                                    {%- assign grandchild_item_id = child_item_id | append: '-' | append: forloop.index -%}
-                                    <li class="footer__menu-item">
-                                      <div class="footer__menu-row">
-                                        <a href="{{ grandchild_link.url }}"{% if grandchild_link.current %} aria-current="page"{% endif %}>{{ grandchild_link.title | escape }}</a>
-                                      </div>
-                                    </li>
-                                  {%- endfor -%}
-                                </ul>
-                              {%- endif -%}
-                            </li>
-                          {%- endfor -%}
-                        </ul>
-                      {%- endif -%}
-                    </li>
-                  {%- endfor -%}
+                  {% render 'navigation-links', links: fmenu.links, variant: 'footer', prefix: menu_prefix %}
                 {%- else -%}
                   <li><a href="{{ routes.root_url }}">Home</a></li>
                   <li><a href="{{ routes.all_products_collection_url }}">Shop</a></li>
