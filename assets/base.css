@@ -98,7 +98,7 @@ h1, h2, h3, h4, h5, h6 {
 .announcement { text-align: center; font-size: 12px; letter-spacing: .16em; text-transform: uppercase; padding: 9px 0; }
 .announcement a:hover { text-decoration: underline; }
 
-.site-header { background: var(--color-bg); border-bottom: 1px solid var(--color-border); z-index: 100; position: relative; }
+.site-header { container-type: inline-size; background: var(--color-bg); border-bottom: 1px solid var(--color-border); z-index: 100; position: relative; }
 .site-header.is-sticky { position: sticky; top: 0; }
 .header__inner { display: flex; align-items: center; justify-content: space-between; gap: 24px; min-height: 76px; position: relative; }
 .header__logo { display: inline-flex; align-items: center; flex-shrink: 0; }
@@ -113,6 +113,18 @@ h1, h2, h3, h4, h5, h6 {
 .header__menu a:hover, .header__menu a[aria-current="page"] { border-color: var(--color-text); }
 .header__icons { display: flex; align-items: center; gap: 18px; }
 .header__icon { position: relative; display: inline-flex; padding: 6px; }
+.header__search-toggle { cursor: pointer; list-style: none; }
+.header__search-toggle::-webkit-details-marker { display: none; }
+.header__search[open] .header__search-toggle { background: var(--color-alt-bg); }
+.header__search-panel { position: absolute; top: 100%; left: 50%; width: 100cqw; transform: translateX(-50%); z-index: 120; padding: 24px; background: var(--color-bg); border-bottom: 1px solid var(--color-border); box-shadow: 0 8px 24px rgba(0,0,0,.08); }
+.header__search-form { display: flex; gap: 12px; width: 100%; margin: 0; }
+.header__search-form input { flex: 1; min-width: 0; width: 100%; border: 1px solid var(--color-border); background: var(--color-bg); color: var(--color-text); padding: 14px 16px; border-radius: var(--btn-radius); font-size: 16px; }
+.header__search-form .btn { flex-shrink: 0; }
+@media (max-width: 749px) {
+  .header__search-panel { padding: 16px; }
+  .header__search-form { gap: 8px; }
+  .header__search-form .btn { padding-inline: 16px; }
+}
 .cart-count {
   position: absolute; top: -2px; right: -4px; min-width: 18px; height: 18px; border-radius: 9px;
   background: var(--color-accent); color: var(--color-accent-text); font-size: 11px; line-height: 18px; text-align: center; padding: 0 4px;

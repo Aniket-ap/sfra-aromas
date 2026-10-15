@@ -30,6 +30,21 @@
     </nav>
 
     <div class="header__icons">
+      {%- if section.settings.show_search -%}
+        <details class="header__search" data-header-search>
+          <summary class="header__icon header__search-toggle" aria-label="Search" aria-controls="HeaderSearchPanel-{{ section.id }}">
+            {% render 'icon', name: 'search', size: 22 %}
+          </summary>
+          <div class="header__search-panel" id="HeaderSearchPanel-{{ section.id }}">
+            <form action="{{ routes.search_url }}" method="get" role="search" class="header__search-form">
+              <label class="visually-hidden" for="HeaderSearch-{{ section.id }}">Search the store</label>
+              <input type="search" id="HeaderSearch-{{ section.id }}" name="q" value="{{ search.terms | escape }}" placeholder="{{ section.settings.search_placeholder | escape }}" autocomplete="off" required data-header-search-input>
+              <input type="hidden" name="options[prefix]" value="last">
+              <button type="submit" class="btn btn--solid">Search</button>
+            </form>
+          </div>
+        </details>
+      {%- endif -%}
       {%- if section.settings.show_account and shop.customer_accounts_enabled -%}
         <a href="{{ routes.account_url }}" class="header__icon" aria-label="Account">{% render 'icon', name: 'user', size: 22 %}</a>
       {%- endif -%}
@@ -53,6 +68,8 @@
       "info": "Create a menu with Home, Shop, Aromatheory and Contact Us under Content → Menus."
     },
     { "type": "checkbox", "id": "sticky", "label": "Sticky header", "default": true },
+    { "type": "checkbox", "id": "show_search", "label": "Show search", "default": true },
+    { "type": "text", "id": "search_placeholder", "label": "Search placeholder", "default": "Search diffusers, fragrance oils and more" },
     { "type": "checkbox", "id": "show_account", "label": "Show account icon", "default": false }
   ]
 }

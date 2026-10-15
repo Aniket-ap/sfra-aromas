@@ -17,6 +17,32 @@
     if (header && !header.sfraNavigation) {
       var controller = new AbortController();
       var options = { signal: controller.signal };
+      var search = header.querySelector('[data-header-search]');
+      if (search) {
+        search.addEventListener('toggle', function () {
+          if (!search.open) return;
+          closeSubmenus();
+          document.body.classList.remove('nav-open');
+          if (toggle) toggle.setAttribute('aria-expanded', 'false');
+          search.querySelector('[data-header-search-input]').focus();
+        }, options);
+        search.addEventListener('keydown', function (event) {
+          if (event.key === 'Escape') {
+            event.preventDefault();
+            event.stopPropagation();
+            search.open = false;
+            search.querySelector('summary').focus();
+          }
+        }, options);
+        document.addEventListener('click', function (event) {
+          if (!search.contains(event.target)) search.open = false;
+        }, options);
+        search.querySelector('form').addEventListener('submit', function (event) {
+          var input = search.querySelector('[data-header-search-input]');
+          input.value = input.value.trim();
+          if (!input.value) { event.preventDefault(); input.focus(); }
+        }, options);
+      }
       function setSubmenu(button, open) {
         var panel = header.querySelector('[id="' + button.getAttribute('aria-controls') + '"]');
         if (!panel) return;
