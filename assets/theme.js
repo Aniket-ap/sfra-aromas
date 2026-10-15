@@ -265,9 +265,55 @@
       filterForm.addEventListener('change', function () { filterForm.submit(); });
     }
 
+    /* Quantity controls preserve native form submission and Shopify quantity rules. */
+    root.querySelectorAll('[data-quantity-control]').forEach(function (control) {
+      if (control.sfraQuantity) return;
+      control.sfraQuantity = true;
+      var input = control.querySelector('[data-quantity-input]');
+      var minus = control.querySelector('[data-quantity-minus]');
+      var plus = control.querySelector('[data-quantity-plus]');
+      function limits() {
+        return { min: Number(input.min) || 0, step: Number(input.step) || 1, max: input.max === '' ? Infinity : Number(input.max), order: Number(input.getAttribute('data-min-order')) || Number(input.min) || 1 };
+      }
+      function sync() {
+        var rule = limits();
+        minus.disabled = Number(input.value) <= rule.min;
+        plus.disabled = Number(input.value) >= rule.max;
+      }
+      function change(direction) {
+        var rule = limits();
+        var value = Number(input.value);
+        if (!Number.isFinite(value)) value = rule.min;
+        var next = value + direction * rule.step;
+        if (rule.min === 0 && direction > 0 && value === 0) next = rule.order;
+        if (rule.min === 0 && next < rule.order) next = 0;
+        input.value = Math.min(rule.max, Math.max(rule.min, next));
+        input.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+      minus.addEventListener('click', function () { change(-1); });
+      plus.addEventListener('click', function () { change(1); });
+      input.addEventListener('change', sync);
+      sync();
+    });
+
     /* ---- Product page: variants + gallery ---- */
     var product = root.querySelector('[data-product]');
     if (product) {
+      var productForm = product.querySelector('.product-form');
+      if (productForm && !productForm.sfraSubmitGuard) {
+        productForm.sfraSubmitGuard = true;
+        productForm.addEventListener('submit', function (event) {
+          if (event.defaultPrevented) return;
+          if (productForm.dataset.submitting === 'true') { event.preventDefault(); return; }
+          productForm.dataset.submitting = 'true';
+          var button = productForm.querySelector('[data-add-btn]');
+          if (button) {
+            button.dataset.originalLabel = button.textContent;
+            button.dataset.originalDisabled = String(button.disabled);
+            button.disabled = true; button.textContent = 'Adding?';
+          }
+        });
+      }
       var jsonEl = product.querySelector('[data-product-json]');
       var priceEl = product.querySelector('[data-variant-prices]');
       if (jsonEl && priceEl) {
@@ -277,6 +323,8 @@
         var idInput = product.querySelector('[data-variant-id]');
         var priceOut = product.querySelector('[data-price]');
         var addBtn = product.querySelector('[data-add-btn]');
+        var buyNow = product.querySelector('[data-buy-now]');
+        var quantity = product.querySelector('[data-quantity-input]');
 
         var showMedia = function (id) {
           if (!id) return;
@@ -303,14 +351,28 @@
             if (ok) variant = v;
           });
           if (!variant) {
+            if (buyNow) { buyNow.hidden = true; buyNow.disabled = true; }
+            idInput.value = '';
             addBtn.disabled = true;
             addBtn.textContent = 'Unavailable';
             return;
           }
           var info = extra[String(variant.id)];
           idInput.value = variant.id;
+          idInput.dispatchEvent(new Event('change', { bubbles: true }));
           if (info) {
             priceOut.innerHTML = (info.compare ? '<s>' + info.compare + '</s> ' : '') + '<span>' + info.price + '</span>';
+            if (buyNow) { buyNow.hidden = !info.available; buyNow.disabled = !info.available; }
+            if (quantity) {
+              quantity.min = info.quantity_min;
+              quantity.step = info.quantity_step;
+              quantity.max = info.quantity_max || '';
+              var count = Math.max(info.quantity_min, Number(quantity.value) || info.quantity_min);
+              count = info.quantity_min + Math.ceil((count - info.quantity_min) / info.quantity_step) * info.quantity_step;
+              if (info.quantity_max) count = Math.min(count, info.quantity_max);
+              quantity.value = count;
+              quantity.dispatchEvent(new Event('change', { bubbles: true }));
+            }
             addBtn.disabled = !info.available;
             addBtn.textContent = info.available ? 'Add to cart' : 'Sold out';
             showMedia(info.media);
@@ -334,6 +396,17 @@
     }
   }
   initTheme(document);
+  window.addEventListener('pageshow', function (event) {
+    if (!event.persisted) return;
+    document.querySelectorAll('.product-form').forEach(function (form) {
+      delete form.dataset.submitting;
+      var button = form.querySelector('[data-add-btn]');
+      if (button && button.dataset.originalLabel) {
+        button.textContent = button.dataset.originalLabel;
+        button.disabled = button.dataset.originalDisabled === 'true';
+      }
+    });
+  });
   document.addEventListener('shopify:section:load', function (event) {
     initTheme(event.target);
   });

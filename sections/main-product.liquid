@@ -3,43 +3,38 @@
 <section class="section product" style="--pt: 48px; --pb: 72px;" data-product>
   <div class="container">
     <div class="product__layout">
+      {%- liquid
+        assign product_images = product.media | where: 'media_type', 'image'
+        assign active_media = current_variant.featured_media
+        unless active_media.media_type == 'image'
+          assign active_media = product_images.first
+        endunless
+      -%}
       <div class="product__gallery">
         <div class="product__main" data-main-image>
-          {%- if product.featured_media -%}
-            {%- for media in product.media -%}
-              {%- if media.media_type == 'image' -%}
-                {%- liquid
-                  assign is_active = false
-                  if current_variant.featured_media
-                    if media.id == current_variant.featured_media.id
-                      assign is_active = true
-                    endif
-                  endif
-                  unless current_variant.featured_media
-                    if forloop.first
-                      assign is_active = true
-                    endif
-                  endunless
-                -%}
-                <div class="product__slide{% if is_active %} is-active{% endif %}" data-media-id="{{ media.id }}">
-                  {%- assign img_alt = media.alt | default: product.title -%}{{ media | image_url: width: 1400 | image_tag: loading: 'lazy', widths: '500, 800, 1100, 1400', sizes: '(min-width: 990px) 50vw, 100vw', alt: img_alt }}
-                </div>
-              {%- endif -%}
-            {%- endfor -%}
+          {%- for media in product_images -%}
+            {%- liquid
+              assign image_loading = 'lazy'
+              if media.id == active_media.id
+                assign image_loading = 'eager'
+              endif
+              assign img_alt = media.alt | default: product.title
+            -%}
+            <div class="product__slide{% if media.id == active_media.id %} is-active{% endif %}" data-media-id="{{ media.id }}">
+              {{ media | image_url: width: 1400 | image_tag: loading: image_loading, widths: '360, 500, 800, 1100, 1400', sizes: '(min-width: 990px) 480px, (min-width: 750px) 480px, 100vw', alt: img_alt }}
+            </div>
           {%- else -%}
             {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
-          {%- endif -%}
+          {%- endfor -%}
         </div>
-        {%- if product.media.size > 1 -%}
+        {%- if product_images.size > 1 -%}
           <ul class="product__thumbs">
-            {%- for media in product.media -%}
-              {%- if media.media_type == 'image' -%}
-                <li>
-                  <button type="button" class="product__thumb" data-thumb="{{ media.id }}" aria-label="Image {{ forloop.index }}">
-                    {{ media | image_url: width: 200 | image_tag: loading: 'lazy', alt: '' }}
-                  </button>
-                </li>
-              {%- endif -%}
+            {%- for media in product_images -%}
+              <li>
+                <button type="button" class="product__thumb{% if media.id == active_media.id %} is-active{% endif %}" data-thumb="{{ media.id }}" aria-label="Image {{ forloop.index }}">
+                  {{ media | image_url: width: 200 | image_tag: loading: 'lazy', alt: '' }}
+                </button>
+              </li>
             {%- endfor -%}
           </ul>
         {%- endif -%}
@@ -57,6 +52,7 @@
         </p>
 
         {%- form 'product', product, class: 'product-form', id: 'ProductForm' -%}
+          {{ form.errors | default_errors }}
           <input type="hidden" name="id" value="{{ current_variant.id }}" data-variant-id>
 
           {%- unless product.has_only_default_variant -%}
@@ -77,12 +73,19 @@
 
           <div class="field field--qty">
             <label for="Quantity">Quantity</label>
-            <input type="number" id="Quantity" name="quantity" value="1" min="1" inputmode="numeric">
+            <div class="quantity-control" data-quantity-control>
+              <button type="button" aria-label="Decrease quantity" data-quantity-minus><i class="bi bi-dash-lg" aria-hidden="true"></i></button>
+              <input type="number" id="Quantity" name="quantity" value="{{ current_variant.quantity_rule.min }}" min="{{ current_variant.quantity_rule.min }}" step="{{ current_variant.quantity_rule.increment }}"{% if current_variant.quantity_rule.max %} max="{{ current_variant.quantity_rule.max }}"{% endif %} inputmode="numeric" data-quantity-input>
+              <button type="button" aria-label="Increase quantity" data-quantity-plus><i class="bi bi-plus-lg" aria-hidden="true"></i></button>
+            </div>
           </div>
 
-          <button type="submit" class="btn btn--solid btn--block" data-add-btn{% unless current_variant.available %} disabled{% endunless %}>
-            {%- if current_variant.available -%}Add to cart{%- else -%}Sold out{%- endif -%}
-          </button>
+          <div class="product__actions">
+            <button type="submit" name="add" class="btn btn--solid" data-add-btn{% unless current_variant.available %} disabled{% endunless %}>
+              {%- if current_variant.available -%}Add to cart{%- else -%}Sold out{%- endif -%}
+            </button>
+            <button type="submit" name="return_to" value="{{ routes.root_url }}checkout" class="btn btn--outline product__buy-now" data-buy-now{% unless current_variant.available %} hidden disabled{% endunless %}>Buy now</button>
+          </div>
         {%- endform -%}
 
         {%- if product.description != blank -%}
@@ -100,6 +103,9 @@
           "price": {{ v.price | money | json }},
           "compare": {% if v.compare_at_price > v.price %}{{ v.compare_at_price | money | json }}{% else %}""{% endif %},
           "available": {{ v.available | json }},
+          "quantity_min": {{ v.quantity_rule.min | default: 1 | json }},
+          "quantity_step": {{ v.quantity_rule.increment | default: 1 | json }},
+          "quantity_max": {{ v.quantity_rule.max | json }},
           "media": {% if v.featured_media %}{{ v.featured_media.id }}{% else %}null{% endif %}
         }{% unless forloop.last %},{% endunless %}
       {%- endfor -%}

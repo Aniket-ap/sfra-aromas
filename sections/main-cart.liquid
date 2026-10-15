@@ -26,12 +26,21 @@
                 {%- unless item.product.has_only_default_variant -%}
                   <p class="cart-item__variant">{{ item.variant.title }}</p>
                 {%- endunless -%}
+                {%- if item.selling_plan_allocation -%}<p class="cart-item__variant">{{ item.selling_plan_allocation.selling_plan.name | escape }}</p>{%- endif -%}
+                {%- for property in item.properties -%}
+                  {%- assign first_character = property.first | slice: 0 -%}
+                  {%- if property.last != blank and first_character != '_' -%}<p class="cart-item__variant">{{ property.first | escape }}: {{ property.last | escape }}</p>{%- endif -%}
+                {%- endfor -%}
                 <p class="cart-item__price">{{ item.final_price | money }}</p>
                 <a href="{{ item.url_to_remove }}" class="cart-item__remove">Remove</a>
               </div>
               <div class="cart-item__qty">
                 <label class="visually-hidden" for="Qty{{ item.index }}">Quantity</label>
-                <input type="number" id="Qty{{ item.index }}" name="updates[]" value="{{ item.quantity }}" min="0" inputmode="numeric">
+                <div class="quantity-control quantity-control--cart" data-quantity-control>
+                  <button type="button" aria-label="Decrease quantity for {{ item.product.title | escape }}" data-quantity-minus><i class="bi bi-dash-lg" aria-hidden="true"></i></button>
+                  <input type="number" id="Qty{{ item.index }}" name="updates[]" value="{{ item.quantity }}" min="0" step="{{ item.variant.quantity_rule.increment }}"{% if item.variant.quantity_rule.max %} max="{{ item.variant.quantity_rule.max }}"{% endif %} data-min-order="{{ item.variant.quantity_rule.min }}" inputmode="numeric" data-quantity-input>
+                  <button type="button" aria-label="Increase quantity for {{ item.product.title | escape }}" data-quantity-plus><i class="bi bi-plus-lg" aria-hidden="true"></i></button>
+                </div>
               </div>
               <div class="cart-item__total">{{ item.final_line_price | money }}</div>
             </li>
