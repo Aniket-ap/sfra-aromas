@@ -1,0 +1,84 @@
+{
+  "sections": {
+    "banner": {
+      "type": "page-banner",
+      "settings": {
+        "eyebrow": "The science of scent",
+        "heading": "Aromatheory",
+        "text": "How fragrance shapes mood, memory and the way a space is experienced.",
+        "height": 320
+      }
+    },
+    "intro": {
+      "type": "text-image",
+      "settings": {
+        "eyebrow": "Understanding aroma",
+        "heading": "Scent is the fastest route to memory",
+        "content": "<p>Smell is the only sense wired directly to the brain's emotional and memory centres. A well-chosen fragrance can calm a waiting room, energise a studio or make a hotel lobby unforgettable.</p><p>Aromatheory is our approach to choosing the right scent, in the right strength, for the right space.</p>",
+        "image_position": "right"
+      }
+    },
+    "notes": {
+      "type": "why-grid",
+      "blocks": {
+        "n1": { "type": "card", "settings": { "title": "Top notes", "text": "The first impression. Light, fresh and volatile â€” citrus, herbs and light florals that greet you within minutes." } },
+        "n2": { "type": "card", "settings": { "title": "Heart notes", "text": "The character of the fragrance. Florals, spices and fruits that emerge as the top notes fade and define the scent's personality." } },
+        "n3": { "type": "card", "settings": { "title": "Base notes", "text": "The lasting memory. Woods, resins and musks that anchor the blend and linger long after diffusion." } }
+      },
+      "block_order": ["n1", "n2", "n3"],
+      "settings": {
+        "eyebrow": "The fragrance pyramid",
+        "heading": "Top, Heart & Base Notes",
+        "subheading": "Every fragrance unfolds in three stages.",
+        "show_divider": false,
+        "columns": "3",
+        "background": "alt"
+      }
+    },
+    "families": {
+      "type": "icon-cards",
+      "blocks": {
+        "f1": { "type": "card", "settings": { "icon": "leaf", "title": "Fresh & Green", "text": "Clean, crisp and energising. Ideal for lobbies, offices and clinics." } },
+        "f2": { "type": "card", "settings": { "icon": "spa", "title": "Floral", "text": "Soft, elegant and welcoming. Perfect for spas, salons and homes." } },
+        "f3": { "type": "card", "settings": { "icon": "star", "title": "Woody & Amber", "text": "Warm, rich and grounding. Suits hotels, lounges and boutiques." } },
+        "f4": { "type": "card", "settings": { "icon": "droplet", "title": "Citrus & Aquatic", "text": "Bright and uplifting. Great for cafÃ©s, studios and retail spaces." } }
+      },
+      "block_order": ["f1", "f2", "f3", "f4"],
+      "settings": {
+        "eyebrow": "Scent families",
+        "heading": "Choose by Mood & Space",
+        "subheading": "Match the character of a scent to the feeling you want to create.",
+        "columns": "4"
+      }
+    },
+    "how": {
+      "type": "text-image",
+      "settings": {
+        "eyebrow": "Cold-air nebulization",
+        "heading": "Diffusion that keeps the oil intact",
+        "content": "<p>Our waterless diffusers break pure fragrance oil into microscopic particles using cold air â€” no heat, no water, no dilution. The scent you choose is the scent you smell, evenly and consistently across the room.</p>",
+        "image_position": "left"
+      }
+    },
+    "faq": {
+      "type": "faq",
+      "blocks": {
+        "q1": { "type": "question", "settings": { "question": "How do I choose the right scent for my space?", "answer": "<p>Start with the mood you want to create, then consider the size and use of the room. Our team is happy to recommend a blend â€” just send us a message.</p>" } },
+        "q2": { "type": "question", "settings": { "question": "How long does a fragrance oil last?", "answer": "<p>That depends on the diffuser setting and room size. Most commercial setups run for several weeks per bottle.</p>" } },
+        "q3": { "type": "question", "settings": { "question": "Are your oils safe for sensitive environments?", "answer": "<p>All SFRA fragrance oils are phthalate and nitromusk free and tested in line with IFRA safety standards.</p>" } }
+      },
+      "block_order": ["q1", "q2", "q3"],
+      "settings": {
+        "background": "alt"
+      }
+    },
+    "cta": {
+      "type": "cta",
+      "settings": {
+        "button_link": "/pages/contact",
+        "button_link_2": "/collections/all"
+      }
+    }
+  },
+  "order": ["banner", "intro", "notes", "families", "how", "faq", "cta"]
+}

@@ -1,0 +1,62 @@
+{%- assign menu = linklists[section.settings.menu] -%}
+
+<header class="site-header{% if section.settings.sticky %} is-sticky{% endif %}" data-header>
+  <div class="container header__inner">
+    <button type="button" class="header__toggle" aria-expanded="false" aria-controls="HeaderNav" data-nav-toggle aria-label="Menu">
+      <span class="header__toggle-open">{% render 'icon', name: 'menu', size: 24 %}</span>
+      <span class="header__toggle-close">{% render 'icon', name: 'close', size: 24 %}</span>
+    </button>
+
+    <a href="{{ routes.root_url }}" class="header__logo" aria-label="{{ shop.name | escape }}" style="--logo-width: {{ settings.logo_width }}px;">
+      {%- if settings.logo != blank -%}
+        {{ settings.logo | image_url: width: 640 | image_tag: width: settings.logo_width, alt: shop.name, loading: 'eager', class: 'header__logo-img' }}
+      {%- else -%}
+        <span class="header__logo-text">{{ shop.name }}</span>
+      {%- endif -%}
+    </a>
+
+    <nav class="header__nav" id="HeaderNav" aria-label="Main menu" data-nav>
+      <ul class="header__menu">
+        {%- if menu != blank and menu.links.size > 0 -%}
+          {%- for link in menu.links -%}
+            <li>
+              <a href="{{ link.url }}"{% if link.current or link.child_active %} aria-current="page"{% endif %}>{{ link.title }}</a>
+            </li>
+          {%- endfor -%}
+        {%- else -%}
+          <li><a href="{{ routes.root_url }}">Home</a></li>
+          <li><a href="{{ routes.all_products_collection_url }}">Shop</a></li>
+          <li><a href="/pages/aromatherapy">Aromatheory</a></li>
+          <li><a href="/pages/contact">Contact Us</a></li>
+        {%- endif -%}
+      </ul>
+    </nav>
+
+    <div class="header__icons">
+      {%- if section.settings.show_account and shop.customer_accounts_enabled -%}
+        <a href="{{ routes.account_url }}" class="header__icon" aria-label="Account">{% render 'icon', name: 'user', size: 22 %}</a>
+      {%- endif -%}
+      <a href="{{ routes.cart_url }}" class="header__icon header__cart" aria-label="Cart">
+        {% render 'icon', name: 'cart', size: 22 %}
+        <span class="cart-count{% if cart.item_count == 0 %} is-empty{% endif %}" data-cart-count>{{ cart.item_count }}</span>
+      </a>
+    </div>
+  </div>
+</header>
+
+{% schema %}
+{
+  "name": "Header",
+  "settings": [
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Menu",
+      "default": "main-menu",
+      "info": "Create a menu with Home, Shop, Aromatheory and Contact Us under Content → Menus."
+    },
+    { "type": "checkbox", "id": "sticky", "label": "Sticky header", "default": true },
+    { "type": "checkbox", "id": "show_account", "label": "Show account icon", "default": false }
+  ]
+}
+{% endschema %}

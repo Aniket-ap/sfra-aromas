@@ -1,0 +1,71 @@
+<section class="section bg-{{ section.settings.background }}" style="--pt: {{ section.settings.padding_top }}px; --pb: {{ section.settings.padding_bottom }}px;">
+  <div class="container container--narrow">
+    {% render 'section-heading', eyebrow: section.settings.eyebrow, heading: section.settings.heading, text: section.settings.subheading, align: 'center' %}
+
+    <div class="compare-wrap">
+      <table class="compare">
+        <thead>
+          <tr>
+            <th scope="col">{{ section.settings.col_feature }}</th>
+            <th scope="col">{{ section.settings.col_other }}</th>
+            <th scope="col" class="compare__brand">{{ section.settings.col_brand }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {%- for block in section.blocks -%}
+            <tr {{ block.shopify_attributes }}>
+              <th scope="row">{{ block.settings.feature }}</th>
+              <td>{{ block.settings.other }}</td>
+              <td class="compare__brand">{% render 'icon', name: 'check', size: 16 %} <strong>{{ block.settings.brand }}</strong></td>
+            </tr>
+          {%- endfor -%}
+        </tbody>
+      </table>
+    </div>
+
+    {%- if section.settings.footnote != blank -%}
+      <p class="compare__note">{{ section.settings.footnote }}</p>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Comparison table",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Small heading", "default": "Superior Diffusion Technology" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "The SFRA Difference" },
+    { "type": "textarea", "id": "subheading", "label": "Subheading", "default": "How waterless cold-air nebulization compares to conventional water-based or aerosol systems." },
+    { "type": "header", "content": "Column titles" },
+    { "type": "text", "id": "col_feature", "label": "Feature column", "default": "Feature" },
+    { "type": "text", "id": "col_other", "label": "Other column", "default": "Traditional Diffusers" },
+    { "type": "text", "id": "col_brand", "label": "Your brand column", "default": "SFRA Aromas" },
+    { "type": "text", "id": "footnote", "label": "Footnote", "default": "All SFRA formulations are tested and certified compliant with International Fragrance Association (IFRA) safety standards." },
+    { "type": "header", "content": "Section style" },
+    { "type": "select", "id": "background", "label": "Background", "options": [
+      { "value": "default", "label": "White" },
+      { "value": "alt", "label": "Light gray" },
+      { "value": "dark", "label": "Black" }
+    ], "default": "default" },
+    { "type": "range", "id": "padding_top", "min": 0, "max": 160, "step": 4, "unit": "px", "label": "Top padding", "default": 72 },
+    { "type": "range", "id": "padding_bottom", "min": 0, "max": 160, "step": 4, "unit": "px", "label": "Bottom padding", "default": 72 }
+  ],
+  "blocks": [
+    {
+      "type": "row",
+      "name": "Row",
+      "settings": [
+        { "type": "text", "id": "feature", "label": "Feature", "default": "Feature" },
+        { "type": "text", "id": "other", "label": "Traditional value", "default": "Limited" },
+        { "type": "text", "id": "brand", "label": "Your brand value", "default": "Better" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Comparison table",
+      "blocks": [{ "type": "row" }, { "type": "row" }, { "type": "row" }]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,26 @@
+{
+  "sections": {
+    "banner": {
+      "type": "page-banner",
+      "settings": {
+        "eyebrow": "Contact us",
+        "heading": "Talk to the SFRA Aromas Team",
+        "text": "Questions about diffusers, fragrance oils or a custom scent for your space? We're here to help.",
+        "height": 280
+      }
+    },
+    "form": {
+      "type": "contact-form",
+      "blocks": {
+        "email": { "type": "info", "settings": { "icon": "mail", "title": "Email", "text": "<p>hello@sfraaromas.com</p>" } },
+        "phone": { "type": "info", "settings": { "icon": "phone", "title": "Phone", "text": "<p>+00 000 000 0000</p>" } },
+        "hours": { "type": "info", "settings": { "icon": "clock", "title": "Business hours", "text": "<p>Mon – Fri, 9am – 6pm</p>" } }
+      },
+      "block_order": ["email", "phone", "hours"],
+      "settings": {
+        "background": "alt"
+      }
+    }
+  },
+  "order": ["banner", "form"]
+}

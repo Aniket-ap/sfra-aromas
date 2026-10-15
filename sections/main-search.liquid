@@ -1,0 +1,42 @@
+{%- paginate search.results by 12 -%}
+  <section class="section" style="--pt: 48px; --pb: 72px;">
+    <div class="container">
+      <div class="section-heading section-heading--center">
+        <h1 class="section-heading__title">Search</h1>
+      </div>
+      <form action="{{ routes.search_url }}" method="get" role="search" class="search-form">
+        <input type="search" name="q" value="{{ search.terms | escape }}" placeholder="Search…" aria-label="Search">
+        <input type="hidden" name="options[prefix]" value="last">
+        <button type="submit" class="btn btn--solid">Search</button>
+      </form>
+
+      {%- if search.performed -%}
+        <p class="search-count">{{ search.results_count }} result{% if search.results_count != 1 %}s{% endif %} for "{{ search.terms }}"</p>
+        <div class="product-grid" style="--cols: 4; --cols-mobile: 2;">
+          {%- for item in search.results -%}
+            {%- if item.object_type == 'product' -%}
+              {% render 'product-card', product: item %}
+            {%- else -%}
+              <article class="info-card info-card--outline">
+                <h3 class="info-card__title"><a href="{{ item.url }}">{{ item.title }}</a></h3>
+              </article>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+        {%- if paginate.pages > 1 -%}
+          <nav class="pagination" aria-label="Pagination">
+            {%- if paginate.previous -%}<a href="{{ paginate.previous.url }}" class="pagination__link">&larr; Prev</a>{%- endif -%}
+            {%- if paginate.next -%}<a href="{{ paginate.next.url }}" class="pagination__link">Next &rarr;</a>{%- endif -%}
+          </nav>
+        {%- endif -%}
+      {%- endif -%}
+    </div>
+  </section>
+{%- endpaginate -%}
+
+{% schema %}
+{
+  "name": "Search results",
+  "settings": []
+}
+{% endschema %}

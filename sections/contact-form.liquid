@@ -1,0 +1,154 @@
+<section class="section bg-{{ section.settings.background }}" style="--pt: {{ section.settings.padding_top }}px; --pb: {{ section.settings.padding_bottom }}px;">
+  <div class="container">
+    <div class="contact">
+      <div class="contact__info">
+        {%- if section.settings.eyebrow != blank -%}<p class="eyebrow">{{ section.settings.eyebrow }}</p>{%- endif -%}
+        {%- if section.settings.heading != blank -%}<h2 class="contact__title">{{ section.settings.heading }}</h2>{%- endif -%}
+        {%- if section.settings.text != blank -%}<p class="contact__intro">{{ section.settings.text }}</p>{%- endif -%}
+
+        <ul class="contact__list">
+          {%- for block in section.blocks -%}
+            <li class="contact__item" {{ block.shopify_attributes }}>
+              <span class="contact__icon">{% render 'icon', name: block.settings.icon, size: 20 %}</span>
+              <div>
+                {%- if block.settings.title != blank -%}<p class="contact__item-title">{{ block.settings.title }}</p>{%- endif -%}
+                <div class="rte contact__item-text">{{ block.settings.text }}</div>
+              </div>
+            </li>
+          {%- endfor -%}
+        </ul>
+      </div>
+
+      <div class="contact__form-wrap">
+        {%- form 'contact', id: 'ContactForm', class: 'contact-form' -%}
+          {%- if form.posted_successfully? -%}
+            <p class="form-message form-message--success" role="status">{{ section.settings.success_message }}</p>
+          {%- endif -%}
+          {%- if form.errors -%}
+            <div class="form-message form-message--error" role="alert">
+              <ul>
+                {%- for field in form.errors -%}
+                  <li>{{ form.errors.translated_fields[field] | capitalize }} {{ form.errors.messages[field] }}</li>
+                {%- endfor -%}
+              </ul>
+            </div>
+          {%- endif -%}
+
+          <div class="form-row">
+            <div class="field">
+              <label for="ContactName">Full name <span aria-hidden="true">*</span></label>
+              <input type="text" id="ContactName" name="contact[name]" value="{{ form.name }}" autocomplete="name" required>
+            </div>
+            <div class="field">
+              <label for="ContactEmail">Email <span aria-hidden="true">*</span></label>
+              <input type="email" id="ContactEmail" name="contact[email]" value="{{ form.email }}" autocomplete="email" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="field">
+              <label for="ContactPhone">Phone</label>
+              <input type="tel" id="ContactPhone" name="contact[phone]" value="{{ form.phone }}" autocomplete="tel">
+            </div>
+            {%- if section.settings.show_company -%}
+              <div class="field">
+                <label for="ContactCompany">Company / Business name</label>
+                <input type="text" id="ContactCompany" name="contact[Company]" autocomplete="organization">
+              </div>
+            {%- endif -%}
+          </div>
+
+          <div class="field">
+            <label for="ContactProduct">{{ section.settings.product_label }}</label>
+            <div class="select-wrap">
+              <select id="ContactProduct" name="contact[Product of interest]" data-product-select>
+                <option value="">Select an option</option>
+                {%- if section.settings.collection != blank -%}
+                  {%- for product in section.settings.collection.products limit: 100 -%}
+                    <option value="{{ product.title | escape }}">{{ product.title }}</option>
+                  {%- endfor -%}
+                {%- else -%}
+                  {%- for product in collections.all.products limit: 100 -%}
+                    <option value="{{ product.title | escape }}">{{ product.title }}</option>
+                  {%- endfor -%}
+                {%- endif -%}
+                {%- assign extras = section.settings.extra_options | newline_to_br | split: '<br />' -%}
+                {%- for extra in extras -%}
+                  {%- assign extra_clean = extra | strip -%}
+                  {%- if extra_clean != blank -%}
+                    <option value="{{ extra_clean | escape }}">{{ extra_clean }}</option>
+                  {%- endif -%}
+                {%- endfor -%}
+                <option value="Other">Other</option>
+              </select>
+              {% render 'icon', name: 'chevron-down', size: 16 %}
+            </div>
+          </div>
+
+          <div class="field" data-other-field hidden>
+            <label for="ContactOther">{{ section.settings.other_label }}</label>
+            <input type="text" id="ContactOther" name="contact[Other requirement]" maxlength="120" placeholder="{{ section.settings.other_placeholder | escape }}">
+          </div>
+
+          <div class="field">
+            <label for="ContactMessage">{{ section.settings.message_label }}</label>
+            <textarea id="ContactMessage" name="contact[body]" rows="5" maxlength="{{ section.settings.message_limit }}" data-counter-input placeholder="{{ section.settings.message_placeholder | escape }}"></textarea>
+            <p class="field__counter"><span data-counter>0</span> / {{ section.settings.message_limit }}</p>
+          </div>
+
+          <button type="submit" class="btn btn--solid">{{ section.settings.button_label }}</button>
+        {%- endform -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Contact form",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Small heading", "default": "Get in touch" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Let's Find Your Signature Scent" },
+    { "type": "textarea", "id": "text", "label": "Intro text", "default": "Tell us about your space and we'll recommend the right diffuser and fragrance oils." },
+    { "type": "header", "content": "Form" },
+    { "type": "checkbox", "id": "show_company", "label": "Show company / business field", "default": true },
+    { "type": "text", "id": "product_label", "label": "Dropdown label", "default": "Product you're interested in" },
+    { "type": "collection", "id": "collection", "label": "Products in dropdown", "info": "Leave empty to list all products (up to 100)." },
+    { "type": "textarea", "id": "extra_options", "label": "Extra dropdown options", "info": "One per line, shown before 'Other'. E.g. Fragrance consultation", "default": "Fragrance consultation\nBulk / commercial order" },
+    { "type": "text", "id": "other_label", "label": "'Other' field label", "default": "Tell us what you're looking for" },
+    { "type": "text", "id": "other_placeholder", "label": "'Other' field placeholder", "default": "e.g. custom scent for a boutique hotel" },
+    { "type": "text", "id": "message_label", "label": "Message label", "default": "Your requirement" },
+    { "type": "text", "id": "message_placeholder", "label": "Message placeholder", "default": "Briefly describe your space and needs…" },
+    { "type": "range", "id": "message_limit", "min": 100, "max": 1000, "step": 50, "label": "Message character limit", "default": 300 },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "Send message" },
+    { "type": "text", "id": "success_message", "label": "Success message", "default": "Thanks for contacting us. We'll get back to you shortly." },
+    { "type": "header", "content": "Section style" },
+    { "type": "select", "id": "background", "label": "Background", "options": [
+      { "value": "default", "label": "White" },
+      { "value": "alt", "label": "Light gray" },
+      { "value": "dark", "label": "Black" }
+    ], "default": "default" },
+    { "type": "range", "id": "padding_top", "min": 0, "max": 160, "step": 4, "unit": "px", "label": "Top padding", "default": 72 },
+    { "type": "range", "id": "padding_bottom", "min": 0, "max": 160, "step": 4, "unit": "px", "label": "Bottom padding", "default": 72 }
+  ],
+  "blocks": [
+    {
+      "type": "info",
+      "name": "Contact detail",
+      "settings": [
+        { "type": "select", "id": "icon", "label": "Icon", "options": [
+          { "value": "mail", "label": "Email" },
+          { "value": "phone", "label": "Phone" },
+          { "value": "pin", "label": "Location" },
+          { "value": "clock", "label": "Hours" }
+        ], "default": "mail" },
+        { "type": "text", "id": "title", "label": "Title", "default": "Email" },
+        { "type": "richtext", "id": "text", "label": "Text", "default": "<p>hello@sfraaromas.com</p>" }
+      ]
+    }
+  ],
+  "presets": [
+    { "name": "Contact form", "blocks": [{ "type": "info" }] }
+  ]
+}
+{% endschema %}

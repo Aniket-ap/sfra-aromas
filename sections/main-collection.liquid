@@ -1,0 +1,100 @@
+{%- paginate collection.products by section.settings.products_per_page -%}
+  <section class="section" style="--pt: 48px; --pb: 72px;">
+    <div class="container">
+      <div class="section-heading section-heading--center">
+        <h1 class="section-heading__title">{{ collection.title }}</h1>
+        {%- if section.settings.show_description and collection.description != blank -%}
+          <div class="section-heading__text rte">{{ collection.description }}</div>
+        {%- endif -%}
+      </div>
+
+      <form class="collection-toolbar" id="FilterForm" data-filter-form>
+        {%- if section.settings.enable_filtering and collection.filters.size > 0 -%}
+          <div class="filters">
+            {%- for filter in collection.filters -%}
+              {%- case filter.type -%}
+                {%- when 'list', 'boolean' -%}
+                  <details class="filter"{% if filter.active_values.size > 0 %} open{% endif %}>
+                    <summary>{{ filter.label }} {% render 'icon', name: 'chevron-down', size: 14 %}</summary>
+                    <ul class="filter__list">
+                      {%- for value in filter.values -%}
+                        <li>
+                          <label>
+                            <input type="checkbox" name="{{ value.param_name }}" value="{{ value.value }}"{% if value.active %} checked{% endif %}{% if value.count == 0 and value.active == false %} disabled{% endif %}>
+                            {{ value.label }} ({{ value.count }})
+                          </label>
+                        </li>
+                      {%- endfor -%}
+                    </ul>
+                  </details>
+                {%- when 'price_range' -%}
+                  <details class="filter"{% if filter.min_value.value != nil or filter.max_value.value != nil %} open{% endif %}>
+                    <summary>{{ filter.label }} {% render 'icon', name: 'chevron-down', size: 14 %}</summary>
+                    <div class="filter__price">
+                      <input type="number" name="{{ filter.min_value.param_name }}" value="{{ filter.min_value.value | money_without_currency | replace: ',', '' }}" min="0" placeholder="From">
+                      <input type="number" name="{{ filter.max_value.param_name }}" value="{{ filter.max_value.value | money_without_currency | replace: ',', '' }}" min="0" placeholder="To">
+                    </div>
+                  </details>
+              {%- endcase -%}
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+
+        {%- if section.settings.enable_sorting -%}
+          <div class="sort">
+            <label for="SortBy">Sort by</label>
+            <div class="select-wrap">
+              <select name="sort_by" id="SortBy">
+                {%- assign sort_by = collection.sort_by | default: collection.default_sort_by -%}
+                {%- for option in collection.sort_options -%}
+                  <option value="{{ option.value }}"{% if option.value == sort_by %} selected{% endif %}>{{ option.name }}</option>
+                {%- endfor -%}
+              </select>
+              {% render 'icon', name: 'chevron-down', size: 16 %}
+            </div>
+          </div>
+        {%- endif -%}
+      </form>
+
+      {%- if collection.products.size == 0 -%}
+        <p class="empty-state">No products found. <a href="{{ collection.url }}">Clear filters</a></p>
+      {%- else -%}
+        <div class="product-grid" style="--cols: {{ section.settings.columns }}; --cols-mobile: {{ section.settings.columns_small }};">
+          {%- for product in collection.products -%}
+            {% render 'product-card', product: product %}
+          {%- endfor -%}
+        </div>
+      {%- endif -%}
+
+      {%- if paginate.pages > 1 -%}
+        <nav class="pagination" aria-label="Pagination">
+          {%- if paginate.previous -%}<a href="{{ paginate.previous.url }}" class="pagination__link">&larr; Prev</a>{%- endif -%}
+          {%- for part in paginate.parts -%}
+            {%- if part.is_link -%}
+              <a href="{{ part.url }}" class="pagination__link">{{ part.title }}</a>
+            {%- elsif part.title == paginate.current_page -%}
+              <span class="pagination__link is-current" aria-current="page">{{ part.title }}</span>
+            {%- else -%}
+              <span class="pagination__link">{{ part.title }}</span>
+            {%- endif -%}
+          {%- endfor -%}
+          {%- if paginate.next -%}<a href="{{ paginate.next.url }}" class="pagination__link">Next &rarr;</a>{%- endif -%}
+        </nav>
+      {%- endif -%}
+    </div>
+  </section>
+{%- endpaginate -%}
+
+{% schema %}
+{
+  "name": "Collection / Shop",
+  "settings": [
+    { "type": "checkbox", "id": "show_description", "label": "Show collection description", "default": true },
+    { "type": "range", "id": "products_per_page", "min": 4, "max": 48, "step": 4, "label": "Products per page", "default": 12 },
+    { "type": "select", "id": "columns", "label": "Columns (desktop)", "options": [{ "value": "2", "label": "2" }, { "value": "3", "label": "3" }, { "value": "4", "label": "4" }, { "value": "5", "label": "5" }], "default": "4" },
+    { "type": "select", "id": "columns_small", "label": "Columns (mobile)", "options": [{ "value": "1", "label": "1" }, { "value": "2", "label": "2" }], "default": "2" },
+    { "type": "checkbox", "id": "enable_filtering", "label": "Enable filtering", "default": true, "info": "Filters are configured in Shopify's Search & Discovery app." },
+    { "type": "checkbox", "id": "enable_sorting", "label": "Enable sorting", "default": true }
+  ]
+}
+{% endschema %}

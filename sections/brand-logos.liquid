@@ -1,0 +1,196 @@
+<section class="section bg-{{ section.settings.background }}" style="--pt: {{ section.settings.padding_top }}px; --pb: {{ section.settings.padding_bottom }}px;">
+  <div class="container">
+    {% render 'section-heading', eyebrow: section.settings.eyebrow, heading: section.settings.heading, text: section.settings.subheading, align: 'center' %}
+
+    <ul class="brand-logos{% if section.settings.grayscale %} is-grayscale{% endif %}"
+      style="--logo-h: {{ section.settings.logo_height }}px; --logo-h-mobile: {{ section.settings.logo_height_small }}px; --cols: {{ section.settings.columns }}; --cols-mobile: {{ section.settings.columns_small }};">
+      {%- for block in section.blocks -%}
+        <li class="brand-logos__item" {{ block.shopify_attributes }}>
+          {%- capture logo -%}
+            {%- if block.settings.logo != blank -%}
+              {%- assign img_alt = block.settings.name | default: block.settings.logo.alt -%}{{ block.settings.logo | image_url: width: 600 | image_tag: loading: 'lazy', widths: '200, 300, 450, 600', sizes: '(min-width: 750px) 25vw, 50vw', class: 'brand-logos__img', alt: img_alt }}
+            {%- else -%}
+              <span class="brand-logos__placeholder">{{ block.settings.name | default: 'Brand logo' }}</span>
+            {%- endif -%}
+          {%- endcapture -%}
+          {%- if block.settings.link != blank -%}
+            <a href="{{ block.settings.link }}" aria-label="{{ block.settings.name | escape }}">{{ logo }}</a>
+          {%- else -%}
+            {{ logo }}
+          {%- endif -%}
+        </li>
+      {%- endfor -%}
+    </ul>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Brand logos",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Small heading",
+      "default": "Trusted by leading brands and loved by customers"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Iconic Brands Choose SFRA Aromas. Real People Love The Experience."
+    },
+    {
+      "type": "textarea",
+      "id": "subheading",
+      "label": "Subheading"
+    },
+    {
+      "type": "header",
+      "content": "Logo display"
+    },
+    {
+      "type": "range",
+      "id": "logo_height",
+      "min": 40,
+      "max": 240,
+      "step": 4,
+      "unit": "px",
+      "label": "Logo height (desktop)",
+      "default": 112
+    },
+    {
+      "type": "range",
+      "id": "logo_height_small",
+      "min": 32,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "label": "Logo height (mobile)",
+      "default": 72
+    },
+    {
+      "type": "range",
+      "id": "columns",
+      "min": 2,
+      "max": 6,
+      "step": 1,
+      "label": "Logos per row (desktop)",
+      "default": 4
+    },
+    {
+      "type": "select",
+      "id": "columns_small",
+      "label": "Logos per row (mobile)",
+      "options": [
+        {
+          "value": "1",
+          "label": "1"
+        },
+        {
+          "value": "2",
+          "label": "2"
+        },
+        {
+          "value": "3",
+          "label": "3"
+        }
+      ],
+      "default": "2"
+    },
+    {
+      "type": "checkbox",
+      "id": "grayscale",
+      "label": "Show logos in grayscale",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Section style"
+    },
+    {
+      "type": "select",
+      "id": "background",
+      "label": "Background",
+      "options": [
+        {
+          "value": "default",
+          "label": "White"
+        },
+        {
+          "value": "alt",
+          "label": "Light gray"
+        },
+        {
+          "value": "dark",
+          "label": "Black"
+        }
+      ],
+      "default": "default"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 72
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 72
+    }
+  ],
+  "blocks": [
+    {
+      "type": "logo",
+      "name": "Brand logo",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "logo",
+          "label": "Logo"
+        },
+        {
+          "type": "text",
+          "id": "name",
+          "label": "Brand name",
+          "default": "Brand name"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link (optional)"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Brand logos",
+      "blocks": [
+        {
+          "type": "logo"
+        },
+        {
+          "type": "logo"
+        },
+        {
+          "type": "logo"
+        },
+        {
+          "type": "logo"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,58 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "SFRA Aromas",
+    "theme_version": "1.0.0",
+    "theme_author": "SFRA Aromas",
+    "theme_documentation_url": "https://help.shopify.com/",
+    "theme_support_url": "https://help.shopify.com/"
+  },
+  {
+    "name": "Logo & favicon",
+    "settings": [
+      { "type": "image_picker", "id": "logo", "label": "Logo image" },
+      { "type": "range", "id": "logo_width", "min": 60, "max": 320, "step": 10, "unit": "px", "label": "Logo width (desktop)", "default": 140 },
+      { "type": "image_picker", "id": "favicon", "label": "Favicon", "info": "Square image, at least 32 x 32px" }
+    ]
+  },
+  {
+    "name": "Colors",
+    "settings": [
+      { "type": "color", "id": "color_bg", "label": "Page background", "default": "#ffffff" },
+      { "type": "color", "id": "color_alt_bg", "label": "Alternate section background", "default": "#f3f3f3" },
+      { "type": "color", "id": "color_text", "label": "Main text", "default": "#111111" },
+      { "type": "color", "id": "color_muted", "label": "Muted / secondary text", "default": "#6b6b6b" },
+      { "type": "color", "id": "color_accent", "label": "Accent (buttons, dark sections)", "default": "#111111" },
+      { "type": "color", "id": "color_accent_text", "label": "Text on accent", "default": "#ffffff" },
+      { "type": "color", "id": "color_border", "label": "Borders & lines", "default": "#e3e3e3" }
+    ]
+  },
+  {
+    "name": "Typography",
+    "settings": [
+      { "type": "font_picker", "id": "type_heading_font", "label": "Heading font", "default": "assistant_n6" },
+      { "type": "font_picker", "id": "type_body_font", "label": "Body font", "default": "assistant_n4" },
+      { "type": "range", "id": "heading_scale", "min": 80, "max": 130, "step": 5, "unit": "%", "label": "Heading size scale", "default": 100 },
+      { "type": "checkbox", "id": "heading_uppercase", "label": "Uppercase headings", "default": true }
+    ]
+  },
+  {
+    "name": "Layout & style",
+    "settings": [
+      { "type": "range", "id": "page_width", "min": 1000, "max": 1600, "step": 100, "unit": "px", "label": "Maximum page width", "default": 1300 },
+      { "type": "range", "id": "button_radius", "min": 0, "max": 40, "step": 2, "unit": "px", "label": "Button corner radius", "default": 0 },
+      { "type": "range", "id": "card_radius", "min": 0, "max": 24, "step": 2, "unit": "px", "label": "Card corner radius", "default": 0 }
+    ]
+  },
+  {
+    "name": "Social media",
+    "settings": [
+      { "type": "url", "id": "social_instagram", "label": "Instagram" },
+      { "type": "url", "id": "social_facebook", "label": "Facebook" },
+      { "type": "url", "id": "social_linkedin", "label": "LinkedIn" },
+      { "type": "url", "id": "social_youtube", "label": "YouTube" },
+      { "type": "url", "id": "social_x", "label": "X (Twitter)" },
+      { "type": "url", "id": "social_pinterest", "label": "Pinterest" }
+    ]
+  }
+]

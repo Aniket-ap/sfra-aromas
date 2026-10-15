@@ -1,0 +1,28 @@
+<section class="section" style="--pt: 48px; --pb: 72px;">
+  <div class="container">
+    <div class="section-heading section-heading--center">
+      <h1 class="section-heading__title">Collections</h1>
+    </div>
+    <div class="catalog-grid" style="--cols: 3; --ratio: 4 / 3;">
+      {%- for collection in collections -%}
+        <a href="{{ collection.url }}" class="catalog-card">
+          <div class="catalog-card__media">
+            {%- if collection.image -%}
+              {{ collection.image | image_url: width: 900 | image_tag: loading: 'lazy', widths: '300, 500, 700, 900', sizes: '(min-width: 990px) 30vw, 100vw', alt: collection.title }}
+            {%- else -%}
+              {{ 'product-2' | placeholder_svg_tag: 'placeholder-svg' }}
+            {%- endif -%}
+          </div>
+          <span class="catalog-card__label">{{ collection.title }} {% render 'icon', name: 'arrow', size: 16 %}</span>
+        </a>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Collections list",
+  "settings": []
+}
+{% endschema %}

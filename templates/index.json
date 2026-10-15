@@ -1,0 +1,104 @@
+{
+  "sections": {
+    "hero": {
+      "type": "hero",
+      "blocks": {
+        "slide1": {
+          "type": "slide",
+          "settings": {
+            "eyebrow": "Clean scent technology",
+            "heading": "Pure Scent. Pure Air.",
+            "text": "Waterless cold-air diffusers and IFRA-certified fragrance oils for spaces that make an impression.",
+            "button_label": "Shop the collection",
+            "button_link": "/collections/all",
+            "button_style": "light",
+            "button_label_2": "Book a consultation",
+            "button_link_2": "/pages/contact",
+            "button_style_2": "outline-light"
+          }
+        }
+      },
+      "block_order": ["slide1"],
+      "settings": {
+        "height": "large"
+      }
+    },
+    "brands": {
+      "type": "brand-logos",
+      "blocks": {
+        "logo1": { "type": "logo", "settings": { "name": "Brand 1" } },
+        "logo2": { "type": "logo", "settings": { "name": "Brand 2" } },
+        "logo3": { "type": "logo", "settings": { "name": "Brand 3" } },
+        "logo4": { "type": "logo", "settings": { "name": "Brand 4" } }
+      },
+      "block_order": ["logo1", "logo2", "logo3", "logo4"],
+      "settings": {}
+    },
+    "about": {
+      "type": "about-split",
+      "settings": { "button_link": "/pages/aromatherapy" }
+    },
+    "why": {
+      "type": "why-grid",
+      "blocks": {
+        "c1": { "type": "card", "settings": { "title": "Pure Fragrance Oils", "text": "No synthetic fillers, no compromise. Our fragrance oils are crafted for purity and consistency, delivering rich, true-to-note scent profiles batch after batch." } },
+        "c2": { "type": "card", "settings": { "title": "Phthalate & Nitromusk Free", "text": "Every formulation is free from phthalates and nitromusks â€” ingredients linked to health and environmental concerns and increasingly restricted worldwide. What you smell is what's safe." } },
+        "c3": { "type": "card", "settings": { "title": "IFRA & EU Compliant", "text": "Our fragrance oils and diffusion systems are formulated and tested in line with International Fragrance Association (IFRA) standards and EU cosmetic and chemical regulations, so you can diffuse with confidence in any commercial or residential setting." } },
+        "c4": { "type": "card", "settings": { "title": "Waterless Diffusion", "text": "No water reservoirs, no mold risk, no wasted resources. Our waterless technology means pure oil, pure air, and zero water consumption." } },
+        "c5": { "type": "card", "settings": { "title": "Eco-Sensitive Design", "text": "From recyclable components to energy-efficient diffusion cycles, our products are built with a lighter environmental footprint in mind â€” because a beautiful scent shouldn't cost the planet." } },
+        "c6": { "type": "card", "settings": { "title": "Built for Commercial Use", "text": "Engineered for continuous operation, our diffusers are designed to perform reliably across high-traffic environments â€” with coverage options scaled to small boutiques or large lobbies." } }
+      },
+      "block_order": ["c1", "c2", "c3", "c4", "c5", "c6"],
+      "settings": {}
+    },
+    "serve": {
+      "type": "icon-cards",
+      "blocks": {
+        "s1": { "type": "card", "settings": { "icon": "hotel", "title": "Hotels & Hospitality", "text": "Create a memorable first impression with a signature scent that welcomes guests from the moment they walk through the lobby." } },
+        "s2": { "type": "card", "settings": { "icon": "bank", "title": "Banks & Financial Institutions", "text": "Foster a calm, professional atmosphere that puts clients at ease during every visit." } },
+        "s3": { "type": "card", "settings": { "icon": "spa", "title": "Salons & Spas", "text": "Enhance the sensory experience of relaxation and self-care with scents that complement your treatments." } },
+        "s4": { "type": "card", "settings": { "icon": "car", "title": "Automobiles", "text": "Compact, elegant diffusers designed to bring luxury fragrance into personal and fleet vehicles alike." } },
+        "s5": { "type": "card", "settings": { "icon": "hospital", "title": "Hospitals & Clinics", "text": "Odor-neutralizing, allergen-conscious diffusion designed for sensitive environments where air quality matters most." } },
+        "s6": { "type": "card", "settings": { "icon": "cafe", "title": "CafÃ©s & Restaurants", "text": "Complement the aroma of your kitchen with ambient fragrance that enhances â€” never competes with â€” the dining experience." } },
+        "s7": { "type": "card", "settings": { "icon": "studio", "title": "Studios & Creative Spaces", "text": "Set the mood for focus, creativity, or calm with customizable scent profiles." } },
+        "s8": { "type": "card", "settings": { "icon": "home", "title": "Homes", "text": "Bring the same premium, safe fragrance technology used in five-star hotels into your everyday living spaces." } }
+      },
+      "block_order": ["s1", "s2", "s3", "s4", "s5", "s6", "s7", "s8"],
+      "settings": {}
+    },
+    "featured": {
+      "type": "featured-products",
+      "settings": {}
+    },
+    "difference": {
+      "type": "comparison-table",
+      "blocks": {
+        "r1": { "type": "row", "settings": { "feature": "Water Required", "other": "Yes", "brand": "No â€” Waterless" } },
+        "r2": { "type": "row", "settings": { "feature": "Fragrance Purity", "other": "Often diluted/synthetic", "brand": "Pure fragrance oils" } },
+        "r3": { "type": "row", "settings": { "feature": "Phthalates/Nitromusks", "other": "Common", "brand": "Never used" } },
+        "r4": { "type": "row", "settings": { "feature": "Regulatory Compliance", "other": "Varies", "brand": "IFRA & EU compliant" } },
+        "r5": { "type": "row", "settings": { "feature": "Environmental Impact", "other": "Higher waste", "brand": "Eco-sensitive design" } },
+        "r6": { "type": "row", "settings": { "feature": "Commercial Durability", "other": "Limited", "brand": "Built for continuous use" } }
+      },
+      "block_order": ["r1", "r2", "r3", "r4", "r5", "r6"],
+      "settings": {}
+    },
+    "catalog": {
+      "type": "catalog",
+      "blocks": {
+        "k1": { "type": "collection", "settings": { "title": "Waterless Diffusers" } },
+        "k2": { "type": "collection", "settings": { "title": "Fragrance Oils" } }
+      },
+      "block_order": ["k1", "k2"],
+      "settings": {}
+    },
+    "cta": {
+      "type": "cta",
+      "settings": {
+        "button_link": "/pages/contact",
+        "button_link_2": "/collections/all"
+      }
+    }
+  },
+  "order": ["hero", "brands", "about", "why", "serve", "featured", "difference", "catalog", "cta"]
+}

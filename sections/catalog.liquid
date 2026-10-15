@@ -1,0 +1,83 @@
+<section class="section bg-{{ section.settings.background }}" style="--pt: {{ section.settings.padding_top }}px; --pb: {{ section.settings.padding_bottom }}px;">
+  <div class="container">
+    {% render 'section-heading', eyebrow: section.settings.eyebrow, heading: section.settings.heading, text: section.settings.subheading, align: 'center' %}
+
+    {%- if section.blocks.size > 0 -%}
+      <div class="catalog-grid" style="--cols: {{ section.settings.columns }}; --ratio: {{ section.settings.image_ratio }};">
+        {%- for block in section.blocks -%}
+          {%- liquid
+            assign col = block.settings.collection
+            assign img = block.settings.image
+            if img == blank and col != blank
+              assign img = col.image
+            endif
+            assign label = block.settings.title | default: col.title
+            assign url = block.settings.link | default: col.url
+          -%}
+          <a href="{{ url | default: '#' }}" class="catalog-card" {{ block.shopify_attributes }}>
+            <div class="catalog-card__media">
+              {%- if img != blank -%}
+                {{ img | image_url: width: 900 | image_tag: loading: 'lazy', widths: '300, 500, 700, 900', sizes: '(min-width: 990px) 30vw, 100vw', alt: label }}
+              {%- else -%}
+                {{ 'product-2' | placeholder_svg_tag: 'placeholder-svg' }}
+              {%- endif -%}
+            </div>
+            <span class="catalog-card__label">{{ label | default: 'Collection' }} {% render 'icon', name: 'arrow', size: 16 %}</span>
+          </a>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+
+    {%- if section.settings.button_label != blank -%}
+      <div class="section-cta">
+        <a href="{{ section.settings.button_link | default: routes.all_products_collection_url }}" class="btn btn--solid">{{ section.settings.button_label }}</a>
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Online catalog",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Small heading", "default": "Online Catalog" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Signature Diffusers & Oils" },
+    { "type": "textarea", "id": "subheading", "label": "Subheading", "default": "Discover our collection of waterless cold-air diffusers and IFRA-certified botanical fragrance oils." },
+    { "type": "select", "id": "columns", "label": "Columns (desktop)", "options": [{ "value": "2", "label": "2" }, { "value": "3", "label": "3" }, { "value": "4", "label": "4" }], "default": "2" },
+    { "type": "select", "id": "image_ratio", "label": "Image ratio", "options": [
+      { "value": "1 / 1", "label": "Square" },
+      { "value": "4 / 3", "label": "Landscape 4:3" },
+      { "value": "16 / 9", "label": "Wide 16:9" },
+      { "value": "3 / 4", "label": "Portrait 3:4" }
+    ], "default": "4 / 3" },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "Browse the catalog" },
+    { "type": "url", "id": "button_link", "label": "Button link", "info": "Defaults to the all-products page." },
+    { "type": "header", "content": "Section style" },
+    { "type": "select", "id": "background", "label": "Background", "options": [
+      { "value": "default", "label": "White" },
+      { "value": "alt", "label": "Light gray" },
+      { "value": "dark", "label": "Black" }
+    ], "default": "alt" },
+    { "type": "range", "id": "padding_top", "min": 0, "max": 160, "step": 4, "unit": "px", "label": "Top padding", "default": 72 },
+    { "type": "range", "id": "padding_bottom", "min": 0, "max": 160, "step": 4, "unit": "px", "label": "Bottom padding", "default": 72 }
+  ],
+  "blocks": [
+    {
+      "type": "collection",
+      "name": "Collection card",
+      "settings": [
+        { "type": "collection", "id": "collection", "label": "Collection" },
+        { "type": "image_picker", "id": "image", "label": "Image (overrides collection image)" },
+        { "type": "text", "id": "title", "label": "Title (overrides collection title)" },
+        { "type": "url", "id": "link", "label": "Link (overrides collection link)" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Online catalog",
+      "blocks": [{ "type": "collection" }, { "type": "collection" }]
+    }
+  ]
+}
+{% endschema %}

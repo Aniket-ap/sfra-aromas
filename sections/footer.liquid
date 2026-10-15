@@ -1,0 +1,201 @@
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer__grid">
+      {%- for block in section.blocks -%}
+        <div class="footer__block footer__block--{{ block.type }}" {{ block.shopify_attributes }}>
+          {%- case block.type -%}
+            {%- when 'brand' -%}
+              {%- if settings.logo != blank -%}
+                {{ settings.logo | image_url: width: 480 | image_tag: width: 140, alt: shop.name, loading: 'lazy', class: 'footer__logo' }}
+              {%- else -%}
+                <p class="footer__logo-text">{{ shop.name }}</p>
+              {%- endif -%}
+              {%- if block.settings.text != blank -%}
+                <div class="rte footer__text">{{ block.settings.text }}</div>
+              {%- endif -%}
+              <ul class="social-list">
+                {%- assign networks = 'instagram,facebook,linkedin,youtube,x,pinterest' | split: ',' -%}
+                {%- for network in networks -%}
+                  {%- assign key = 'social_' | append: network -%}
+                  {%- if settings[key] != blank -%}
+                    <li><a href="{{ settings[key] }}" target="_blank" rel="noopener" aria-label="{{ network }}">{% render 'icon', name: network, size: 20 %}</a></li>
+                  {%- endif -%}
+                {%- endfor -%}
+              </ul>
+
+            {%- when 'menu' -%}
+              {%- if block.settings.title != blank -%}<h3 class="footer__title">{{ block.settings.title }}</h3>{%- endif -%}
+              {%- assign fmenu = linklists[block.settings.menu] -%}
+              <ul class="footer__links">
+                {%- if fmenu != blank and fmenu.links.size > 0 -%}
+                  {%- for link in fmenu.links -%}
+                    <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+                  {%- endfor -%}
+                {%- else -%}
+                  <li><a href="{{ routes.root_url }}">Home</a></li>
+                  <li><a href="{{ routes.all_products_collection_url }}">Shop</a></li>
+                  <li><a href="/pages/aromatherapy">Aromatheory</a></li>
+                  <li><a href="/pages/contact">Contact Us</a></li>
+                {%- endif -%}
+              </ul>
+
+            {%- when 'text' -%}
+              {%- if block.settings.title != blank -%}<h3 class="footer__title">{{ block.settings.title }}</h3>{%- endif -%}
+              <div class="rte footer__text">{{ block.settings.text }}</div>
+
+            {%- when 'newsletter' -%}
+              {%- if block.settings.title != blank -%}<h3 class="footer__title">{{ block.settings.title }}</h3>{%- endif -%}
+              {%- if block.settings.text != blank -%}<p class="footer__text">{{ block.settings.text }}</p>{%- endif -%}
+              {%- form 'customer', class: 'newsletter-form', id: 'FooterNewsletter' -%}
+                <input type="hidden" name="contact[tags]" value="newsletter">
+                {%- if form.posted_successfully? -%}
+                  <p class="form-message form-message--success" role="status">Thanks for subscribing!</p>
+                {%- else -%}
+                  {%- if form.errors -%}
+                    <p class="form-message form-message--error" role="alert">{{ form.errors.messages | first }}</p>
+                  {%- endif -%}
+                  <div class="newsletter-form__field">
+                    <label class="visually-hidden" for="NewsletterEmail">Email</label>
+                    <input type="email" id="NewsletterEmail" name="contact[email]" placeholder="Your email address" autocomplete="email" required>
+                    <button type="submit" class="newsletter-form__btn" aria-label="Subscribe">{% render 'icon', name: 'arrow', size: 20 %}</button>
+                  </div>
+                {%- endif -%}
+              {%- endform -%}
+          {%- endcase -%}
+        </div>
+      {%- endfor -%}
+    </div>
+
+    <div class="footer__bottom">
+      <p>&copy; {{ 'now' | date: '%Y' }} {{ shop.name }}. {{ section.settings.copyright }}</p>
+      {%- if section.settings.show_payment_icons -%}
+        <ul class="payment-icons">
+          {%- for type in shop.enabled_payment_types -%}
+            <li>{{ type | payment_type_svg_tag: class: 'icon--payment' }}</li>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+    </div>
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "Footer",
+  "settings": [
+    {
+      "type": "text",
+      "id": "copyright",
+      "label": "Extra copyright text",
+      "default": "Pure Scent. Pure Air. Pure Confidence."
+    },
+    {
+      "type": "checkbox",
+      "id": "show_payment_icons",
+      "label": "Show payment icons",
+      "default": false
+    }
+  ],
+  "blocks": [
+    {
+      "type": "brand",
+      "name": "Brand & social",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Description",
+          "default": "<p>Waterless cold-air diffusers and IFRA-certified fragrance oils.</p>"
+        }
+      ]
+    },
+    {
+      "type": "menu",
+      "name": "Menu",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Heading",
+          "default": "Explore"
+        },
+        {
+          "type": "link_list",
+          "id": "menu",
+          "label": "Menu",
+          "default": "footer"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "name": "Text",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Heading",
+          "default": "Contact"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>Add your contact details here.</p>"
+        }
+      ]
+    },
+    {
+      "type": "newsletter",
+      "name": "Newsletter",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Heading",
+          "default": "Join our newsletter"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Text",
+          "default": "Be first to hear about new scents, launches and offers."
+        }
+      ]
+    }
+  ],
+  "default": {
+    "blocks": [
+      {
+        "type": "brand",
+        "settings": {
+          "text": "<p>Waterless cold-air diffusers and IFRA-certified fragrance oils for hotels, spas, cafés, clinics and homes.</p>"
+        }
+      },
+      {
+        "type": "menu",
+        "settings": {
+          "title": "Explore",
+          "menu": "footer"
+        }
+      },
+      {
+        "type": "text",
+        "settings": {
+          "title": "Contact",
+          "text": "<p>hello@sfraaromas.com</p><p>Mon – Fri, 9am – 6pm</p>"
+        }
+      },
+      {
+        "type": "newsletter",
+        "settings": {
+          "title": "Join our newsletter",
+          "text": "Be first to hear about new scents, launches and offers."
+        }
+      }
+    ]
+  }
+}
+{% endschema %}

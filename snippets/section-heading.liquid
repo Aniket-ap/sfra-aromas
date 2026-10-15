@@ -1,0 +1,10 @@
+{%- comment -%}
+  Params: eyebrow, heading, text, align (center | left)
+{%- endcomment -%}
+{%- if eyebrow != blank or heading != blank or text != blank -%}
+  <div class="section-heading section-heading--{{ align | default: 'center' }}">
+    {%- if eyebrow != blank -%}<p class="eyebrow">{{ eyebrow }}</p>{%- endif -%}
+    {%- if heading != blank -%}<h2 class="section-heading__title">{{ heading }}</h2>{%- endif -%}
+    {%- if text != blank -%}<p class="section-heading__text">{{ text }}</p>{%- endif -%}
+  </div>
+{%- endif -%}

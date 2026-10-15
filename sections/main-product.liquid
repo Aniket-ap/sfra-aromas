@@ -1,0 +1,115 @@
+{%- assign current_variant = product.selected_or_first_available_variant -%}
+
+<section class="section product" style="--pt: 48px; --pb: 72px;" data-product>
+  <div class="container">
+    <div class="product__layout">
+      <div class="product__gallery">
+        <div class="product__main" data-main-image>
+          {%- if product.featured_media -%}
+            {%- for media in product.media -%}
+              {%- if media.media_type == 'image' -%}
+                {%- liquid
+                  assign is_active = false
+                  if current_variant.featured_media
+                    if media.id == current_variant.featured_media.id
+                      assign is_active = true
+                    endif
+                  endif
+                  unless current_variant.featured_media
+                    if forloop.first
+                      assign is_active = true
+                    endif
+                  endunless
+                -%}
+                <div class="product__slide{% if is_active %} is-active{% endif %}" data-media-id="{{ media.id }}">
+                  {%- assign img_alt = media.alt | default: product.title -%}{{ media | image_url: width: 1400 | image_tag: loading: 'lazy', widths: '500, 800, 1100, 1400', sizes: '(min-width: 990px) 50vw, 100vw', alt: img_alt }}
+                </div>
+              {%- endif -%}
+            {%- endfor -%}
+          {%- else -%}
+            {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+          {%- endif -%}
+        </div>
+        {%- if product.media.size > 1 -%}
+          <ul class="product__thumbs">
+            {%- for media in product.media -%}
+              {%- if media.media_type == 'image' -%}
+                <li>
+                  <button type="button" class="product__thumb" data-thumb="{{ media.id }}" aria-label="Image {{ forloop.index }}">
+                    {{ media | image_url: width: 200 | image_tag: loading: 'lazy', alt: '' }}
+                  </button>
+                </li>
+              {%- endif -%}
+            {%- endfor -%}
+          </ul>
+        {%- endif -%}
+      </div>
+
+      <div class="product__info">
+        {%- if product.vendor != blank -%}<p class="eyebrow">{{ product.vendor }}</p>{%- endif -%}
+        <h1 class="product__title">{{ product.title }}</h1>
+
+        <p class="product__price" data-price>
+          {%- if current_variant.compare_at_price > current_variant.price -%}
+            <s>{{ current_variant.compare_at_price | money }}</s>
+          {%- endif -%}
+          <span>{{ current_variant.price | money }}</span>
+        </p>
+
+        {%- form 'product', product, class: 'product-form', id: 'ProductForm' -%}
+          <input type="hidden" name="id" value="{{ current_variant.id }}" data-variant-id>
+
+          {%- unless product.has_only_default_variant -%}
+            {%- for option in product.options_with_values -%}
+              <div class="field">
+                <label for="Option{{ forloop.index0 }}">{{ option.name }}</label>
+                <div class="select-wrap">
+                  <select id="Option{{ forloop.index0 }}" data-option-index="{{ forloop.index0 }}">
+                    {%- for value in option.values -%}
+                      <option value="{{ value | escape }}"{% if option.selected_value == value %} selected{% endif %}>{{ value }}</option>
+                    {%- endfor -%}
+                  </select>
+                  {% render 'icon', name: 'chevron-down', size: 16 %}
+                </div>
+              </div>
+            {%- endfor -%}
+          {%- endunless -%}
+
+          <div class="field field--qty">
+            <label for="Quantity">Quantity</label>
+            <input type="number" id="Quantity" name="quantity" value="1" min="1" inputmode="numeric">
+          </div>
+
+          <button type="submit" class="btn btn--solid btn--block" data-add-btn{% unless current_variant.available %} disabled{% endunless %}>
+            {%- if current_variant.available -%}Add to cart{%- else -%}Sold out{%- endif -%}
+          </button>
+        {%- endform -%}
+
+        {%- if product.description != blank -%}
+          <div class="product__description rte">{{ product.description }}</div>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+
+  <script type="application/json" data-product-json>{{ product | json }}</script>
+  <script type="application/json" data-variant-prices>
+    {
+      {%- for v in product.variants -%}
+        "{{ v.id }}": {
+          "price": {{ v.price | money | json }},
+          "compare": {% if v.compare_at_price > v.price %}{{ v.compare_at_price | money | json }}{% else %}""{% endif %},
+          "available": {{ v.available | json }},
+          "media": {% if v.featured_media %}{{ v.featured_media.id }}{% else %}null{% endif %}
+        }{% unless forloop.last %},{% endunless %}
+      {%- endfor -%}
+    }
+  </script>
+</section>
+
+{% schema %}
+{
+  "name": "Product",
+  "settings": []
+}
+{% endschema %}

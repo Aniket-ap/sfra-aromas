@@ -1,0 +1,45 @@
+{
+  "sections": {
+    "banner": {
+      "type": "page-banner",
+      "settings": {
+        "eyebrow": "Our story",
+        "heading": "About SFRA Aromas",
+        "text": "Clean scent technology that never compromises on quality, safety, or sustainability.",
+        "height": 280
+      }
+    },
+    "story": {
+      "type": "about-split",
+      "settings": {
+        "eyebrow": "Who we are",
+        "heading": "Fragrance is an identity",
+        "quote": "",
+        "button_label": ""
+      }
+    },
+    "values": {
+      "type": "why-grid",
+      "blocks": {
+        "v1": { "type": "card", "settings": { "title": "Purity first", "text": "Pure fragrance oils, never diluted, never filled with synthetics." } },
+        "v2": { "type": "card", "settings": { "title": "Safety always", "text": "Phthalate and nitromusk free, IFRA and EU compliant formulations." } },
+        "v3": { "type": "card", "settings": { "title": "Sustainable by design", "text": "Waterless diffusion, recyclable components and efficient cycles." } }
+      },
+      "block_order": ["v1", "v2", "v3"],
+      "settings": {
+        "eyebrow": "What we stand for",
+        "heading": "Our Values",
+        "subheading": "",
+        "columns": "3"
+      }
+    },
+    "cta": {
+      "type": "cta",
+      "settings": {
+        "button_link": "/pages/contact",
+        "button_link_2": "/collections/all"
+      }
+    }
+  },
+  "order": ["banner", "story", "values", "cta"]
+}

@@ -1,0 +1,19 @@
+{
+  "current": {
+    "logo_width": 140,
+    "color_bg": "#ffffff",
+    "color_alt_bg": "#f3f3f3",
+    "color_text": "#111111",
+    "color_muted": "#6b6b6b",
+    "color_accent": "#111111",
+    "color_accent_text": "#ffffff",
+    "color_border": "#e3e3e3",
+    "type_heading_font": "assistant_n6",
+    "type_body_font": "assistant_n4",
+    "heading_scale": 100,
+    "heading_uppercase": true,
+    "page_width": 1300,
+    "button_radius": 0,
+    "card_radius": 0
+  }
+}

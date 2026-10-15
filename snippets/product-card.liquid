@@ -1,0 +1,40 @@
+{%- comment -%}
+  Product card. Accepts: product
+{%- endcomment -%}
+{%- liquid
+  assign card_image = product.featured_media.preview_image
+  assign hover_image = product.media[1].preview_image
+  assign card_variant = product.selected_or_first_available_variant
+  assign on_sale = false
+  if card_variant.compare_at_price > card_variant.price
+    assign on_sale = true
+  endif
+-%}
+<article class="product-card">
+  <a href="{{ product.url }}" class="product-card__media" aria-label="{{ product.title | escape }}">
+    {%- if card_image != blank -%}
+      {{ card_image | image_url: width: 900 | image_tag: loading: 'lazy', widths: '300, 450, 600, 900', sizes: '(min-width: 990px) 25vw, (min-width: 750px) 33vw, 50vw', class: 'product-card__img' }}
+      {%- if hover_image != blank -%}
+        {{ hover_image | image_url: width: 900 | image_tag: loading: 'lazy', widths: '300, 450, 600, 900', sizes: '(min-width: 990px) 25vw, (min-width: 750px) 33vw, 50vw', class: 'product-card__img product-card__img--hover', alt: '' }}
+      {%- endif -%}
+    {%- else -%}
+      {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+    {%- endif -%}
+    {%- unless product.available -%}
+      <span class="badge">Sold out</span>
+    {%- else -%}
+      {%- if on_sale -%}
+        <span class="badge badge--sale">Sale</span>
+      {%- endif -%}
+    {%- endunless -%}
+  </a>
+  <div class="product-card__info">
+    <h3 class="product-card__title"><a href="{{ product.url }}">{{ product.title }}</a></h3>
+    <p class="product-card__price">
+      {%- if on_sale -%}
+        <s>{{ card_variant.compare_at_price | money }}</s>
+      {%- endif -%}
+      {%- if product.price_varies -%}From {% endif -%}{{ product.price | money }}
+    </p>
+  </div>
+</article>
