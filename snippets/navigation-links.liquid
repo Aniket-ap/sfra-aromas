@@ -1,0 +1,19 @@
+{%- comment -%}Nested Shopify menu links. Accepts links, variant, prefix.{%- endcomment -%}
+{%- for link in links -%}
+  {%- assign item_id = prefix | append: '-' | append: forloop.index -%}
+  <li class="{{ variant }}__menu-item">
+    <div class="{{ variant }}__menu-row">
+      <a href="{{ link.url }}"{% if link.current %} aria-current="page"{% endif %}>{{ link.title | escape }}</a>
+      {%- if variant == 'header' and link.links.size > 0 -%}
+        <button type="button" class="header__submenu-toggle" aria-expanded="false" aria-controls="{{ item_id }}" aria-label="{{ link.title | escape }} submenu" data-submenu-toggle>
+          {% render 'icon', name: 'chevron-down', size: 14 %}
+        </button>
+      {%- endif -%}
+    </div>
+    {%- if link.links.size > 0 -%}
+      <ul class="{{ variant }}__submenu" id="{{ item_id }}"{% if variant == 'header' %} hidden{% endif %}>
+        {% render 'navigation-links', links: link.links, variant: variant, prefix: item_id %}
+      </ul>
+    {%- endif -%}
+  </li>
+{%- endfor -%}

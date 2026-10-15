@@ -5,8 +5,11 @@
         <div class="footer__block footer__block--{{ block.type }}" {{ block.shopify_attributes }}>
           {%- case block.type -%}
             {%- when 'brand' -%}
-              {%- if settings.logo != blank -%}
-                {{ settings.logo | image_url: width: 480 | image_tag: width: 140, alt: shop.name, loading: 'lazy', class: 'footer__logo' }}
+              {%- assign footer_logo = block.settings.logo | default: settings.logo -%}
+              {%- if footer_logo != blank -%}
+                <a href="{{ routes.root_url }}" aria-label="{{ shop.name | escape }}" class="footer__logo-link{% if block.settings.logo_original_colors %} footer__logo-link--original{% endif %}">
+                  {{ footer_logo | image_url: width: 640 | image_tag: width: block.settings.logo_width, alt: shop.name, loading: 'lazy', class: 'footer__logo' }}
+                </a>
               {%- else -%}
                 <p class="footer__logo-text">{{ shop.name }}</p>
               {%- endif -%}
@@ -28,8 +31,38 @@
               {%- assign fmenu = linklists[block.settings.menu] -%}
               <ul class="footer__links">
                 {%- if fmenu != blank and fmenu.links.size > 0 -%}
+                  {%- assign menu_prefix = 'FooterMenu-' | append: section.id | append: '-' | append: block.id -%}
                   {%- for link in fmenu.links -%}
-                    <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+                    {%- assign menu_item_id = menu_prefix | append: '-' | append: forloop.index -%}
+                    <li class="footer__menu-item">
+                      <div class="footer__menu-row">
+                        <a href="{{ link.url }}"{% if link.current %} aria-current="page"{% endif %}>{{ link.title | escape }}</a>
+                      </div>
+                      {%- if link.links.size > 0 -%}
+                        <ul class="footer__submenu" id="{{ menu_item_id }}">
+                          {%- for child_link in link.links -%}
+                            {%- assign child_item_id = menu_item_id | append: '-' | append: forloop.index -%}
+                            <li class="footer__menu-item">
+                              <div class="footer__menu-row">
+                                <a href="{{ child_link.url }}"{% if child_link.current %} aria-current="page"{% endif %}>{{ child_link.title | escape }}</a>
+                              </div>
+                              {%- if child_link.links.size > 0 -%}
+                                <ul class="footer__submenu" id="{{ child_item_id }}">
+                                  {%- for grandchild_link in child_link.links -%}
+                                    {%- assign grandchild_item_id = child_item_id | append: '-' | append: forloop.index -%}
+                                    <li class="footer__menu-item">
+                                      <div class="footer__menu-row">
+                                        <a href="{{ grandchild_link.url }}"{% if grandchild_link.current %} aria-current="page"{% endif %}>{{ grandchild_link.title | escape }}</a>
+                                      </div>
+                                    </li>
+                                  {%- endfor -%}
+                                </ul>
+                              {%- endif -%}
+                            </li>
+                          {%- endfor -%}
+                        </ul>
+                      {%- endif -%}
+                    </li>
                   {%- endfor -%}
                 {%- else -%}
                   <li><a href="{{ routes.root_url }}">Home</a></li>
@@ -102,6 +135,9 @@
       "name": "Brand & social",
       "limit": 1,
       "settings": [
+        { "type": "image_picker", "id": "logo", "label": "Footer logo", "info": "Leave empty to use the logo from Theme settings." },
+        { "type": "range", "id": "logo_width", "min": 60, "max": 320, "step": 10, "unit": "px", "label": "Logo width", "default": 140 },
+        { "type": "checkbox", "id": "logo_original_colors", "label": "Use original logo colors", "default": false },
         {
           "type": "richtext",
           "id": "text",
@@ -124,6 +160,7 @@
           "type": "link_list",
           "id": "menu",
           "label": "Menu",
+          "info": "Choose Main menu or any menu from Content > Menus. Add another Menu block for additional menus.",
           "default": "footer"
         }
       ]

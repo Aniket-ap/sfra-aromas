@@ -18,9 +18,47 @@
     <nav class="header__nav" id="HeaderNav" aria-label="Main menu" data-nav>
       <ul class="header__menu">
         {%- if menu != blank and menu.links.size > 0 -%}
+          {%- assign menu_prefix = 'HeaderMenu-' | append: section.id -%}
           {%- for link in menu.links -%}
-            <li>
-              <a href="{{ link.url }}"{% if link.current or link.child_active %} aria-current="page"{% endif %}>{{ link.title }}</a>
+            {%- assign menu_item_id = menu_prefix | append: '-' | append: forloop.index -%}
+            <li class="header__menu-item">
+              <div class="header__menu-row">
+                <a href="{{ link.url }}"{% if link.current %} aria-current="page"{% endif %}>{{ link.title | escape }}</a>
+                {%- if link.links.size > 0 -%}
+                  <button type="button" class="header__submenu-toggle" aria-expanded="false" aria-controls="{{ menu_item_id }}" aria-label="{{ link.title | escape }} submenu" data-submenu-toggle>
+                    {% render 'icon', name: 'chevron-down', size: 14 %}
+                  </button>
+                {%- endif -%}
+              </div>
+              {%- if link.links.size > 0 -%}
+                <ul class="header__submenu" id="{{ menu_item_id }}" hidden>
+                  {%- for child_link in link.links -%}
+                    {%- assign child_item_id = menu_item_id | append: '-' | append: forloop.index -%}
+                    <li class="header__menu-item">
+                      <div class="header__menu-row">
+                        <a href="{{ child_link.url }}"{% if child_link.current %} aria-current="page"{% endif %}>{{ child_link.title | escape }}</a>
+                        {%- if child_link.links.size > 0 -%}
+                          <button type="button" class="header__submenu-toggle" aria-expanded="false" aria-controls="{{ child_item_id }}" aria-label="{{ child_link.title | escape }} submenu" data-submenu-toggle>
+                            {% render 'icon', name: 'chevron-down', size: 14 %}
+                          </button>
+                        {%- endif -%}
+                      </div>
+                      {%- if child_link.links.size > 0 -%}
+                        <ul class="header__submenu" id="{{ child_item_id }}" hidden>
+                          {%- for grandchild_link in child_link.links -%}
+                            {%- assign grandchild_item_id = child_item_id | append: '-' | append: forloop.index -%}
+                            <li class="header__menu-item">
+                              <div class="header__menu-row">
+                                <a href="{{ grandchild_link.url }}"{% if grandchild_link.current %} aria-current="page"{% endif %}>{{ grandchild_link.title | escape }}</a>
+                              </div>
+                            </li>
+                          {%- endfor -%}
+                        </ul>
+                      {%- endif -%}
+                    </li>
+                  {%- endfor -%}
+                </ul>
+              {%- endif -%}
             </li>
           {%- endfor -%}
         {%- else -%}
