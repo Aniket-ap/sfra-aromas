@@ -17,31 +17,140 @@
     if (header && !header.sfraNavigation) {
       var controller = new AbortController();
       var options = { signal: controller.signal };
-      var search = header.querySelector('[data-header-search]');
-      if (search) {
-        search.addEventListener('toggle', function () {
-          if (!search.open) return;
+      var search = header.querySelector('[data-search-modal]');
+      var searchTrigger = header.querySelector('[data-search-open]');
+      if (search && searchTrigger && typeof search.showModal === 'function') {
+        // The top-layer dialog stays independent of sticky-header stacking and clipping.
+        document.body.appendChild(search);
+        var input = search.querySelector('[data-search-input]');
+        var products = search.querySelector('[data-search-products]');
+        var label = search.querySelector('[data-search-label]');
+        var status = search.querySelector('[data-search-status]');
+        var allLink = search.querySelector('[data-search-all]');
+        var initialProducts = products.innerHTML;
+        var catalogUrl = allLink.href;
+        var searchUrl = search.getAttribute('data-search-url');
+        var timer;
+        var request;
+        var sequence = 0;
+        function cancelRequest() {
+          clearTimeout(timer);
+          if (request) request.abort();
+          sequence += 1;
+          products.removeAttribute('aria-busy');
+        }
+        function resetResults() {
+          products.innerHTML = initialProducts;
+          label.textContent = 'Explore products';
+          allLink.href = catalogUrl;
+          allLink.firstChild.textContent = 'View all products ';
+          status.textContent = '';
+        }
+        function closeSearch() { if (search.open) search.close(); }
+        searchTrigger.addEventListener('click', function (event) {
+          event.preventDefault();
           closeSubmenus();
           document.body.classList.remove('nav-open');
           if (toggle) toggle.setAttribute('aria-expanded', 'false');
-          search.querySelector('[data-header-search-input]').focus();
+          search.showModal();
+          document.body.classList.add('search-modal-open');
+          input.focus();
+          if (input.value.trim()) input.dispatchEvent(new Event('input'));
         }, options);
-        search.addEventListener('keydown', function (event) {
-          if (event.key === 'Escape') {
-            event.preventDefault();
-            event.stopPropagation();
-            search.open = false;
-            search.querySelector('summary').focus();
-          }
-        }, options);
-        document.addEventListener('click', function (event) {
-          if (!search.contains(event.target)) search.open = false;
+        search.querySelector('[data-search-close]').addEventListener('click', closeSearch, options);
+        search.addEventListener('click', function (event) { if (event.target === search) closeSearch(); }, options);
+        search.addEventListener('close', function () {
+          cancelRequest();
+          document.body.classList.remove('search-modal-open');
+          searchTrigger.focus();
         }, options);
         search.querySelector('form').addEventListener('submit', function (event) {
-          var input = search.querySelector('[data-header-search-input]');
           input.value = input.value.trim();
           if (!input.value) { event.preventDefault(); input.focus(); }
         }, options);
+        input.addEventListener('input', function () {
+          cancelRequest();
+          var query = input.value.trim();
+          if (!query) { resetResults(); return; }
+          var current = sequence;
+          var resultUrl = new URL(searchUrl, window.location.origin);
+          resultUrl.searchParams.set('q', query);
+          resultUrl.searchParams.set('type', 'product');
+          resultUrl.searchParams.set('options[prefix]', 'last');
+          allLink.href = resultUrl.toString();
+          allLink.firstChild.textContent = 'View all results ';
+          label.textContent = 'Searching?';
+          status.textContent = 'Searching products';
+          products.replaceChildren();
+          products.setAttribute('aria-busy', 'true');
+          timer = setTimeout(async function () {
+            request = new AbortController();
+            try {
+              var url = new URL(searchUrl + '/suggest.json', window.location.origin);
+              url.searchParams.set('q', query);
+              url.searchParams.set('resources[type]', 'product');
+              url.searchParams.set('resources[limit]', '10');
+              var response = await fetch(url.toString(), { signal: request.signal, headers: { Accept: 'application/json' } });
+              if (!response.ok) throw new Error('Search unavailable');
+              var data = await response.json();
+              if (current !== sequence || !search.open) return;
+              var matches = data.resources.results.products || [];
+              products.replaceChildren();
+              matches.forEach(function (product) {
+                var li = document.createElement('li');
+                var link = document.createElement('a');
+                link.className = 'search-modal__product';
+                link.href = product.url;
+                var thumbnail = document.createElement('span');
+                thumbnail.className = 'search-modal__thumbnail';
+                var imageUrl = product.image || (product.featured_image && product.featured_image.url);
+                if (imageUrl && typeof imageUrl === 'string') {
+                  var image = document.createElement('img');
+                  image.src = imageUrl; image.alt = ''; image.loading = 'lazy'; image.width = 48; image.height = 48;
+                  thumbnail.appendChild(image);
+                } else thumbnail.appendChild(search.querySelector('.search-modal__icon .icon').cloneNode(true));
+                var name = document.createElement('span');
+                name.className = 'search-modal__name'; name.textContent = product.title;
+                var type = document.createElement('span');
+                type.className = 'search-modal__type'; type.textContent = product.type || product.product_type || '';
+                link.append(thumbnail, name, type); li.appendChild(link); products.appendChild(li);
+              });
+              label.textContent = matches.length ? 'Products' : 'No matching products';
+              status.textContent = matches.length + ' products suggested';
+              if (!matches.length) {
+                var empty = document.createElement('li');
+                empty.className = 'search-modal__message'; empty.textContent = 'Try another name, or view all search results below.';
+                products.appendChild(empty);
+              }
+            } catch (error) {
+              if (error.name === 'AbortError' || current !== sequence || !search.open) return;
+              label.textContent = 'Continue your search';
+              status.textContent = 'Suggestions unavailable. Use View all results or press Enter to search.';
+              var message = document.createElement('li');
+              message.className = 'search-modal__message'; message.textContent = 'Press Enter or select View all results to search the store.';
+              products.replaceChildren(message);
+            } finally {
+              if (current === sequence) products.removeAttribute('aria-busy');
+            }
+          }, 180);
+        }, options);
+        search.addEventListener('keydown', function (event) {
+          if (event.key !== 'ArrowDown' && event.key !== 'ArrowUp') return;
+          var links = Array.from(products.querySelectorAll('a'));
+          if (!links.length) return;
+          var index = links.indexOf(document.activeElement);
+          if (document.activeElement !== input && index === -1) return;
+          event.preventDefault();
+          if (event.key === 'ArrowDown') links[Math.min(index + 1, links.length - 1)].focus();
+          else if (index <= 0) input.focus();
+          else links[index - 1].focus();
+        }, options);
+        header.sfraSearchCleanup = function () {
+          cancelRequest();
+          if (search.open) search.close();
+          document.body.classList.remove('search-modal-open');
+          search.remove();
+        };
       }
       function setSubmenu(button, open) {
         var panel = header.querySelector('[id="' + button.getAttribute('aria-controls') + '"]');
@@ -234,6 +343,7 @@
     });
     var header = event.target.querySelector('[data-header]');
     if (header) {
+      if (header.sfraSearchCleanup) header.sfraSearchCleanup();
       if (header.sfraNavigation) header.sfraNavigation.abort();
       document.body.classList.remove('nav-open');
     }
