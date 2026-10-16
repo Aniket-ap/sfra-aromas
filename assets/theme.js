@@ -238,18 +238,102 @@
     }
     root.querySelectorAll('[data-hero]').forEach(initHero);
 
-    /* ---- Contact form: "Other" field + character counter ---- */
-    root.querySelectorAll('[data-product-select]').forEach(function (select) {
-      var form = select.closest('form');
-      var other = form.querySelector('[data-other-field]');
+    /* Each contact dropdown controls its own Other field. */
+    root.querySelectorAll('[data-contact-choice]').forEach(function (choice) {
+      if (choice.sfraChoice) return;
+      choice.sfraChoice = true;
+      var select = choice.querySelector('[data-contact-choice-select]');
+      var other = choice.querySelector('[data-contact-choice-other]');
+      var input = other.querySelector('input');
       function sync() {
         var show = select.value === 'Other';
         other.hidden = !show;
-        var input = other.querySelector('input');
-        if (input) { input.required = show; if (!show) input.value = ''; }
+        input.required = show;
+        input.disabled = !show;
       }
-      select.addEventListener('change', sync);
-      sync();
+      var controller = new AbortController();
+      choice.sfraChoiceController = controller;
+      var events = { signal: controller.signal };
+      var wrap = select.parentElement;
+      var trigger = document.createElement('button');
+      trigger.type = 'button';
+      trigger.className = 'contact-select__trigger';
+      trigger.id = select.id + '-trigger';
+      trigger.setAttribute('aria-haspopup', 'listbox');
+      trigger.setAttribute('aria-expanded', 'false');
+      var panel = document.createElement('div');
+      panel.className = 'contact-select__panel';
+      panel.hidden = true;
+      var search = document.createElement('input');
+      search.type = 'search';
+      search.className = 'contact-select__search';
+      search.placeholder = 'Type to search?';
+      search.setAttribute('aria-label', 'Search dropdown options');
+      search.autocomplete = 'off';
+      var list = document.createElement('div');
+      list.className = 'contact-select__options';
+      list.id = select.id + '-options';
+      list.setAttribute('role', 'listbox');
+      var label = choice.querySelector('label');
+      list.setAttribute('aria-label', label.textContent.trim());
+      trigger.setAttribute('aria-controls', list.id);
+      panel.append(search, list);
+      wrap.append(trigger, panel);
+      select.hidden = true;
+      label.setAttribute('for', trigger.id);
+      var entries = Array.from(select.options).filter(function (option) { return option.value !== ''; });
+      function close() { panel.hidden = true; trigger.setAttribute('aria-expanded', 'false'); }
+      function render() {
+        var query = search.value.trim().toLocaleLowerCase();
+        list.replaceChildren();
+        var matches = entries.filter(function (option) { return option.value === 'Other' || option.textContent.toLocaleLowerCase().includes(query); });
+        matches.forEach(function (option) {
+          var button = document.createElement('button');
+          button.type = 'button';
+          button.className = 'contact-select__option';
+          button.textContent = option.textContent;
+          button.setAttribute('role', 'option');
+          button.setAttribute('aria-selected', String(select.value === option.value));
+          button.addEventListener('click', function () {
+            select.value = option.value;
+            select.dispatchEvent(new Event('change', { bubbles: true }));
+            close(); trigger.focus();
+          });
+          list.appendChild(button);
+        });
+      }
+      function update() {
+        sync();
+        var selected = select.options[select.selectedIndex];
+        trigger.textContent = selected ? selected.textContent : 'Select an option';
+        trigger.setAttribute('aria-label', label.textContent.trim() + ': ' + trigger.textContent);
+      }
+      trigger.addEventListener('click', function () {
+        if (!panel.hidden) { close(); return; }
+        panel.hidden = false;
+        trigger.setAttribute('aria-expanded', 'true');
+        search.value = ''; render(); search.focus();
+      }, events);
+      search.addEventListener('input', render, events);
+      search.addEventListener('keydown', function (event) {
+        if (event.key === 'Enter') { event.preventDefault(); var first = list.querySelector('button'); if (first) first.click(); }
+      }, events);
+      choice.addEventListener('keydown', function (event) {
+        if (event.key === 'Escape' && !panel.hidden) { event.preventDefault(); close(); trigger.focus(); return; }
+        if (panel.hidden || !['ArrowDown', 'ArrowUp'].includes(event.key)) return;
+        var options = Array.from(list.querySelectorAll('button'));
+        if (!options.length) return;
+        var index = options.indexOf(document.activeElement);
+        event.preventDefault();
+        if (event.key === 'ArrowDown') options[Math.min(index + 1, options.length - 1)].focus();
+        else if (index <= 0) search.focus();
+        else options[index - 1].focus();
+      }, events);
+      choice.addEventListener('focusout', function (event) { if (!choice.contains(event.relatedTarget)) close(); }, events);
+      document.addEventListener('click', function (event) { if (!choice.contains(event.target)) close(); }, events);
+      select.addEventListener('change', update, events);
+      select.closest('form').addEventListener('reset', function () { setTimeout(function () { close(); update(); }, 0); }, events);
+      update();
     });
 
     root.querySelectorAll('[data-counter-input]').forEach(function (area) {
@@ -413,6 +497,9 @@
   document.addEventListener('shopify:section:unload', function (event) {
     event.target.querySelectorAll('[data-hero]').forEach(function (hero) {
       if (hero.sfraHero) hero.sfraHero.stop();
+    });
+    event.target.querySelectorAll('[data-contact-choice]').forEach(function (choice) {
+      if (choice.sfraChoiceController) choice.sfraChoiceController.abort();
     });
     var header = event.target.querySelector('[data-header]');
     if (header) {

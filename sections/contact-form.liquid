@@ -45,49 +45,64 @@
             </div>
           </div>
 
-          <div class="form-row">
-            <div class="field">
-              <label for="ContactPhone">Phone</label>
-              <input type="tel" id="ContactPhone" name="contact[phone]" value="{{ form.phone }}" autocomplete="tel">
-            </div>
-            {%- if section.settings.show_company -%}
-              <div class="field">
-                <label for="ContactCompany">Company / Business name</label>
-                <input type="text" id="ContactCompany" name="contact[Company]" autocomplete="organization">
-              </div>
-            {%- endif -%}
-          </div>
-
           <div class="field">
-            <label for="ContactProduct">{{ section.settings.product_label }}</label>
-            <div class="select-wrap">
-              <select id="ContactProduct" name="contact[Product of interest]" data-product-select>
-                <option value="">Select an option</option>
-                {%- if section.settings.collection != blank -%}
-                  {%- for product in section.settings.collection.products limit: 100 -%}
-                    <option value="{{ product.title | escape }}">{{ product.title }}</option>
+            <label for="ContactPhone">Phone</label>
+            <input type="tel" id="ContactPhone" name="contact[phone]" value="{{ form.phone }}" autocomplete="tel">
+          </div>
+
+          <div class="form-row contact-form__choices">
+          <div data-contact-choice>
+            <div class="field">
+              <label for="ContactBrand-{{ section.id }}">{{ section.settings.brand_label }}</label>
+              <div class="select-wrap">
+                <select id="ContactBrand-{{ section.id }}" name="contact[Brand inspiration]" data-contact-choice-select aria-controls="ContactBrandOtherField-{{ section.id }}">
+                  <option value="">Select an option</option>
+                  {%- assign options = section.settings.brand_options | newline_to_br | split: '<br />' -%}
+                  {%- assign options = options | uniq -%}
+                  {%- for option in options -%}
+                    {%- assign option_label = option | strip -%}
+                    {%- assign normalized_option = option_label | downcase -%}
+                    {%- if option_label != blank and normalized_option != 'other' and normalized_option != 'others' -%}
+                      <option value="{{ option_label | escape }}">{{ option_label | escape }}</option>
+                    {%- endif -%}
                   {%- endfor -%}
-                {%- else -%}
-                  {%- for product in collections.all.products limit: 100 -%}
-                    <option value="{{ product.title | escape }}">{{ product.title }}</option>
-                  {%- endfor -%}
-                {%- endif -%}
-                {%- assign extras = section.settings.extra_options | newline_to_br | split: '<br />' -%}
-                {%- for extra in extras -%}
-                  {%- assign extra_clean = extra | strip -%}
-                  {%- if extra_clean != blank -%}
-                    <option value="{{ extra_clean | escape }}">{{ extra_clean }}</option>
-                  {%- endif -%}
-                {%- endfor -%}
-                <option value="Other">Other</option>
-              </select>
-              {% render 'icon', name: 'chevron-down', size: 16 %}
+                  <option value="Other">Other</option>
+                </select>
+                {% render 'icon', name: 'chevron-down', size: 16 %}
+              </div>
+            </div>
+            <div class="field" id="ContactBrandOtherField-{{ section.id }}" data-contact-choice-other>
+              <label for="ContactBrandOther-{{ section.id }}">Other brand inspiration</label>
+              <input type="text" id="ContactBrandOther-{{ section.id }}" name="contact[Other brand inspiration]" maxlength="120" placeholder="Please specify">
             </div>
           </div>
 
-          <div class="field" data-other-field hidden>
-            <label for="ContactOther">{{ section.settings.other_label }}</label>
-            <input type="text" id="ContactOther" name="contact[Other requirement]" maxlength="120" placeholder="{{ section.settings.other_placeholder | escape }}">
+          <div data-contact-choice>
+            <div class="field">
+              <label for="ContactPerfume-{{ section.id }}">{{ section.settings.perfume_label }}</label>
+              <div class="select-wrap">
+                <select id="ContactPerfume-{{ section.id }}" name="contact[Perfume name]" data-contact-choice-select aria-controls="ContactPerfumeOtherField-{{ section.id }}">
+                  <option value="">Select an option</option>
+                  {%- assign options = section.settings.perfume_options | newline_to_br | split: '<br />' -%}
+                  {%- assign options = options | uniq -%}
+                  {%- for option in options -%}
+                    {%- assign option_label = option | strip -%}
+                    {%- assign normalized_option = option_label | downcase -%}
+                    {%- if option_label != blank and normalized_option != 'other' and normalized_option != 'others' -%}
+                      <option value="{{ option_label | escape }}">{{ option_label | escape }}</option>
+                    {%- endif -%}
+                  {%- endfor -%}
+                  <option value="Other">Other</option>
+                </select>
+                {% render 'icon', name: 'chevron-down', size: 16 %}
+              </div>
+            </div>
+            <div class="field" id="ContactPerfumeOtherField-{{ section.id }}" data-contact-choice-other>
+              <label for="ContactPerfumeOther-{{ section.id }}">Other perfume name</label>
+              <input type="text" id="ContactPerfumeOther-{{ section.id }}" name="contact[Other perfume name]" maxlength="120" placeholder="Please specify">
+            </div>
+          </div>
+
           </div>
 
           <div class="field">
@@ -107,48 +122,185 @@
 {
   "name": "Contact form",
   "settings": [
-    { "type": "text", "id": "eyebrow", "label": "Small heading", "default": "Get in touch" },
-    { "type": "text", "id": "heading", "label": "Heading", "default": "Let's Find Your Signature Scent" },
-    { "type": "textarea", "id": "text", "label": "Intro text", "default": "Tell us about your space and we'll recommend the right diffuser and fragrance oils." },
-    { "type": "header", "content": "Form" },
-    { "type": "checkbox", "id": "show_company", "label": "Show company / business field", "default": true },
-    { "type": "text", "id": "product_label", "label": "Dropdown label", "default": "Product you're interested in" },
-    { "type": "collection", "id": "collection", "label": "Products in dropdown", "info": "Leave empty to list all products (up to 100)." },
-    { "type": "textarea", "id": "extra_options", "label": "Extra dropdown options", "info": "One per line, shown before 'Other'. E.g. Fragrance consultation", "default": "Fragrance consultation\nBulk / commercial order" },
-    { "type": "text", "id": "other_label", "label": "'Other' field label", "default": "Tell us what you're looking for" },
-    { "type": "text", "id": "other_placeholder", "label": "'Other' field placeholder", "default": "e.g. custom scent for a boutique hotel" },
-    { "type": "text", "id": "message_label", "label": "Message label", "default": "Your requirement" },
-    { "type": "text", "id": "message_placeholder", "label": "Message placeholder", "default": "Briefly describe your space and needs…" },
-    { "type": "range", "id": "message_limit", "min": 100, "max": 1000, "step": 50, "label": "Message character limit", "default": 300 },
-    { "type": "text", "id": "button_label", "label": "Button label", "default": "Send message" },
-    { "type": "text", "id": "success_message", "label": "Success message", "default": "Thanks for contacting us. We'll get back to you shortly." },
-    { "type": "header", "content": "Section style" },
-    { "type": "select", "id": "background", "label": "Background", "options": [
-      { "value": "default", "label": "White" },
-      { "value": "alt", "label": "Light gray" },
-      { "value": "dark", "label": "Black" }
-    ], "default": "default" },
-    { "type": "range", "id": "padding_top", "min": 0, "max": 160, "step": 4, "unit": "px", "label": "Top padding", "default": 72 },
-    { "type": "range", "id": "padding_bottom", "min": 0, "max": 160, "step": 4, "unit": "px", "label": "Bottom padding", "default": 72 }
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Small heading",
+      "default": "Get in touch"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Let's Find Your Signature Scent"
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Intro text",
+      "default": "Tell us about your space and we'll recommend the right diffuser and fragrance oils."
+    },
+    {
+      "type": "header",
+      "content": "Form"
+    },
+    {
+      "type": "text",
+      "id": "brand_label",
+      "label": "Brand dropdown label",
+      "default": "Brand inspiration"
+    },
+    {
+      "type": "textarea",
+      "id": "brand_options",
+      "label": "Brand inspiration options",
+      "info": "One brand per line. Other is added automatically.",
+      "default": "AGENT PROVOCATEUR\nANTONIO BANDERAS\nAmouage\nArabian oud\nAzzaro\nBDK\nBOADICEA\nBond no 9\nBurberry\nBvlgari\nByredo\nCartier\nChanel\nChopard\nComme Des Garcons\nCostume National\nCreed\nD & G\nD Square\nDIOR\nDiptyque\nEncre Noir\nEssential Perfume\nEx Nihilio\nFREDRIC MALLE\nGIORGIO ARMANI\nGiardini Di Toscana\nGivenchy\nGucci\nGuerlain\nHermes\nHugoboss\nINFINI Parfums\nInitio\nJacques Bogart\nJean Paul Gaultier\nJimmy Choo\nJo Malone\nJuliette has a Gun\nJustin Bieber\nKayali\nKenzo\nKilian\nLancome\nLattaffa\nLaura Bigiotti\nLe Labo\nLes Liquides Imaginaires\nLouis Vuitton\nL’Artisan\nMaison Crivelli\nMaison Francis\nMancera\nMarc Antoin\nMemo Paris\nMolecule 1\nMontale\nMontblanc\nNarcisco Rodriguez\nNasamatto\nNemo\nOrto Parisi\nPaco Robanne\nParfum De Marley\nPenhaligon\nPolo Ralph Lauren\nPrada\nRoberto Cavalli\nRoja Dove\nSerge Lutens\nStephen Humbert\nThameen\nThierry Mugler\nTiziana Terenzi\nTomford\nValentino\nVan Cleef\nVersace\nVictor And Ralph\nVictoria Secret\nWidian\nXerjoff\nYSL\nZadig & Voltaire\nZoologist"
+    },
+    {
+      "type": "text",
+      "id": "perfume_label",
+      "label": "Perfume dropdown label",
+      "default": "Perfume name"
+    },
+    {
+      "type": "textarea",
+      "id": "perfume_options",
+      "label": "Perfume name options",
+      "info": "One perfume per line. Other is added automatically.",
+      "default": "AROMATIC SPICY\nAromatic\nAromatic Aqua\nAromatic Fougere\nAromatic Fruity\nAromatic Green\nAromatic citrus\nAromatic woody\nChypre\nChypre Floral\nChypre Fruity\nCitrus\nCitrus Aromatic\nCitrus Fruity\nCitrus Gourmand\nCitrus Woody\nFLORAL\nFLORAL ALDEHYDE\nFLORAL CHYPRE\nFLORAL MUSK\nFLORAL ROSE\nFLORAL WHITE\nFLORAL WOODY\nFloral Aldehydic\nFloral Amber\nFloral Aquatic\nFloral Aromatic\nFloral Fruity\nFloral Green\nFloral Leathery\nFruity Leathery\nFruity Musk\nGOURMAND\nLEATHER\nLEATHER FRUITY\nLEATHERY\nLeather Animalic\nLeather Fragrance\nLeather Spicy\nLeather Woody\nORIENTAL FOUGERE\nOriental\nOriental Floral\nOriental Spicy\nOriental Vanilla\nOriental Woody\nOriental amber\nOriental aromatic\nOriental leather\nTobacco Fragrance\nWoody\nWoody Amber\nWoody Aquatic\nWoody Aromatic\nWoody Chypre\nWoody Floral\nWoody Fruity\nWoody Green\nWoody Musk\nWoody Spicy\nWoody oriental"
+    },
+    {
+      "type": "text",
+      "id": "message_label",
+      "label": "Message label",
+      "default": "Your requirement"
+    },
+    {
+      "type": "text",
+      "id": "message_placeholder",
+      "label": "Message placeholder",
+      "default": "Briefly describe your space and needs…"
+    },
+    {
+      "type": "range",
+      "id": "message_limit",
+      "min": 100,
+      "max": 1000,
+      "step": 50,
+      "label": "Message character limit",
+      "default": 300
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Send message"
+    },
+    {
+      "type": "text",
+      "id": "success_message",
+      "label": "Success message",
+      "default": "Thanks for contacting us. We'll get back to you shortly."
+    },
+    {
+      "type": "header",
+      "content": "Section style"
+    },
+    {
+      "type": "select",
+      "id": "background",
+      "label": "Background",
+      "options": [
+        {
+          "value": "default",
+          "label": "White"
+        },
+        {
+          "value": "alt",
+          "label": "Light gray"
+        },
+        {
+          "value": "dark",
+          "label": "Black"
+        }
+      ],
+      "default": "default"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "label": "Top padding",
+      "default": 72
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "label": "Bottom padding",
+      "default": 72
+    }
   ],
   "blocks": [
     {
       "type": "info",
       "name": "Contact detail",
       "settings": [
-        { "type": "select", "id": "icon", "label": "Icon", "options": [
-          { "value": "mail", "label": "Email" },
-          { "value": "phone", "label": "Phone" },
-          { "value": "pin", "label": "Location" },
-          { "value": "clock", "label": "Hours" }
-        ], "default": "mail" },
-        { "type": "text", "id": "title", "label": "Title", "default": "Email" },
-        { "type": "richtext", "id": "text", "label": "Text", "default": "<p>hello@sfraaromas.com</p>" }
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            {
+              "value": "mail",
+              "label": "Email"
+            },
+            {
+              "value": "phone",
+              "label": "Phone"
+            },
+            {
+              "value": "pin",
+              "label": "Location"
+            },
+            {
+              "value": "clock",
+              "label": "Hours"
+            }
+          ],
+          "default": "mail"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Email"
+        },
+        {
+          "type": "richtext",
+          "id": "text",
+          "label": "Text",
+          "default": "<p>hello@sfraaromas.com</p>"
+        }
       ]
     }
   ],
   "presets": [
-    { "name": "Contact form", "blocks": [{ "type": "info" }] }
+    {
+      "name": "Contact form",
+      "blocks": [
+        {
+          "type": "info"
+        }
+      ]
+    }
   ]
 }
 {% endschema %}
