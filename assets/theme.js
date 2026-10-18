@@ -238,6 +238,9 @@
     }
     root.querySelectorAll('[data-hero]').forEach(initHero);
 
+    var contactFeedback = root.querySelector('[data-contact-feedback]');
+    if (contactFeedback) contactFeedback.focus();
+
     /* Each contact dropdown controls its own Other field. */
     root.querySelectorAll('[data-contact-choice]').forEach(function (choice) {
       if (choice.sfraChoice) return;
