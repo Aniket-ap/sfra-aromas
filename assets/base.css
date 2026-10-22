@@ -541,14 +541,22 @@ a.pagination__link:hover, .pagination__link.is-current { background: var(--color
 
 
 /* ---- Cart ---- */
-.product-benefits { display: grid; grid-template-columns: repeat(var(--benefit-count, 4), minmax(0, 1fr)); gap: 12px; margin-top: 32px; padding: 28px 0; border-top: 1px solid var(--color-border); border-bottom: 1px solid var(--color-border); }
+.product-benefits { display: grid; grid-template-columns: repeat(var(--benefit-count, 4), minmax(0, 1fr)); gap: 12px; margin-top: 20px; padding: 18px 0; border-bottom: 1px solid var(--color-border); }
 .product-benefits__item { text-align: center; min-width: 0; }
 .product-benefits__icon { display: flex; justify-content: center; align-items: center; height: var(--benefit-icon-size, 36px); margin-bottom: 16px; }
 .product-benefits__icon img, .product-benefits__icon svg { width: var(--benefit-icon-size, 36px); height: var(--benefit-icon-size, 36px); object-fit: contain; }
 .product-benefits__item p { margin: 0; font-size: 14px; line-height: 1.45; overflow-wrap: anywhere; }
 @media (max-width: 389px) { .product-benefits { gap: 8px; } .product-benefits__item p { font-size: 12px; } }
 
-.product-details { margin-top: 32px; border-top: 1px solid var(--color-border); padding-top: 28px; }
+.product-details { margin-top: 24px; }
+.product__info { min-width: 0; }
+.product__description > :last-child { margin-bottom: 0; }
+.product-details__image { width: 100%; height: auto; margin-block: 16px; }
+.product-details__spec-image { width: var(--spec-image-width, 300px); max-width: 100%; }
+.product-details__table-wrap { max-width: 100%; overflow-x: auto; margin-block: 16px; }
+@media (min-width: 990px) {
+  .product__gallery { position: sticky; top: calc(var(--sticky-header-height, 76px) + 20px); align-self: start; max-height: calc(100dvh - var(--sticky-header-height, 76px) - 40px); overflow-y: auto; scrollbar-width: thin; }
+}
 .product-details__heading { font-size: 22px; margin-bottom: 16px; text-transform: none; }
 .product-details__item { border-bottom: 1px solid var(--color-border); }
 .product-details__item summary { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 18px 0; cursor: pointer; list-style: none; font-weight: 600; }

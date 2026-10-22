@@ -33,12 +33,31 @@
     {%- elsif matched_block != nil -%}
       {{ matched_block.settings.specifications }}
     {%- endif -%}
+    {%- if matched_block.settings.specifications_image != blank -%}
+      <div class="product-details__spec-image" style="--spec-image-width: {{ matched_block.settings.specifications_image_width | default: 300 }}px;">
+      {{ matched_block.settings.specifications_image | image_url: width: 1400 | image_tag: loading: 'lazy', widths: '400, 700, 1000, 1400', sizes: '(min-width: 990px) 50vw, 100vw', class: 'product-details__image' }}
+      </div>
+    {%- endif -%}
+    {%- if matched_block.settings.specification_rows != blank -%}
+      {%- assign rows = matched_block.settings.specification_rows | newline_to_br | split: '<br />' -%}
+      <div class="product-details__table-wrap">
+        <table><caption class="visually-hidden">{{ section.settings.specifications_label | escape }}</caption><tbody>
+          {%- for row in rows -%}
+            {%- assign cells = row | split: '|' -%}
+            {%- if cells.size >= 2 -%}<tr><th scope="row">{{ cells.first | strip | escape }}</th><td>{{ cells.last | strip | escape }}</td></tr>{%- endif -%}
+          {%- endfor -%}
+        </tbody></table>
+      </div>
+    {%- endif -%}
   {%- endcapture -%}
   {%- capture box_contents -%}
     {%- if product.metafields.custom.whats_in_the_box != blank -%}
       {{ product.metafields.custom.whats_in_the_box | metafield_tag }}
     {%- elsif matched_block != nil -%}
       {{ matched_block.settings.box_contents }}
+    {%- endif -%}
+    {%- if matched_block.settings.box_image != blank -%}
+      {{ matched_block.settings.box_image | image_url: width: 1400 | image_tag: loading: 'lazy', widths: '400, 700, 1000, 1400', sizes: '(min-width: 990px) 50vw, 100vw', class: 'product-details__image' }}
     {%- endif -%}
   {%- endcapture -%}
   {%- if specifications != blank or box_contents != blank -%}
@@ -52,7 +71,7 @@
       {% endif %}
       {% if box_contents != blank %}
         <details class="product-details__item"{% if specifications == blank and section.settings.details_open_first %} open{% endif %}>
-          <summary>{{ section.settings.box_label | escape }} {% render 'icon', name: 'chevron-down', size: 16 %}</summary>
+          <summary>{{ section.settings.box_label | replace: 'What?s in the box', "What's in the box?" | escape }} {% render 'icon', name: 'chevron-down', size: 16 %}</summary>
           <div class="product-details__content rte">{{ box_contents }}</div>
         </details>
       {% endif %}

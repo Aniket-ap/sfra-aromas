@@ -1,6 +1,6 @@
 {%- assign current_variant = product.selected_or_first_available_variant -%}
 
-<section class="section product" style="--pt: 48px; --pb: 72px;" data-product>
+<section class="section product" style="--pt: 28px; --pb: 48px;" data-product>
   <div class="container">
     <div class="product__layout">
       {%- liquid
@@ -194,7 +194,7 @@
       "type": "text",
       "id": "box_label",
       "label": "Box contents label",
-      "default": "What?s in the box"
+      "default": "What's in the box?"
     },
     {
       "type": "checkbox",
@@ -258,7 +258,34 @@
         {
           "type": "richtext",
           "id": "box_contents",
-          "label": "What?s in the box"
+          "label": "What's in the box?"
+        },
+        {
+          "type": "image_picker",
+          "id": "specifications_image",
+          "label": "Specifications image"
+        },
+        {
+          "type": "range",
+          "id": "specifications_image_width",
+          "label": "Specifications image width",
+          "min": 100,
+          "max": 1000,
+          "step": 20,
+          "unit": "px",
+          "default": 300,
+          "info": "Maximum width. The image scales down automatically on smaller screens."
+        },
+        {
+          "type": "textarea",
+          "id": "specification_rows",
+          "label": "Specification table rows",
+          "info": "One row per line, separated by |. Example: Coverage | 1000 sq ft"
+        },
+        {
+          "type": "image_picker",
+          "id": "box_image",
+          "label": "Box contents image"
         }
       ]
     },

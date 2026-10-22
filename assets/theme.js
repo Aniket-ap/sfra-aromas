@@ -3,6 +3,13 @@
   'use strict';
 
   function initTheme(root) {
+    var stickyHeader = root.querySelector('.site-header.is-sticky');
+    if (stickyHeader && !stickyHeader.sfraSizeObserver && typeof ResizeObserver !== 'undefined') {
+      stickyHeader.sfraSizeObserver = new ResizeObserver(function () {
+        document.documentElement.style.setProperty('--sticky-header-height', stickyHeader.offsetHeight + 'px');
+      });
+      stickyHeader.sfraSizeObserver.observe(stickyHeader);
+    }
     /* ---- Mobile nav ---- */
     var toggle = root.querySelector('[data-nav-toggle]');
     if (toggle) {
@@ -506,6 +513,8 @@
     });
     var header = event.target.querySelector('[data-header]');
     if (header) {
+      if (header.sfraSizeObserver) header.sfraSizeObserver.disconnect();
+      document.documentElement.style.setProperty('--sticky-header-height', '0px');
       if (header.sfraSearchCleanup) header.sfraSearchCleanup();
       if (header.sfraNavigation) header.sfraNavigation.abort();
       document.body.classList.remove('nav-open');
