@@ -51,6 +51,23 @@
           <span>{{ current_variant.price | money }}</span>
         </p>
 
+        {%- liquid
+          assign show_price_note = false
+          if section.settings.price_note_scope == 'all'
+            assign show_price_note = true
+          elsif section.settings.price_note_scope == 'collection' and section.settings.price_note_collection != blank
+            for product_collection in product.collections
+              if product_collection.id == section.settings.price_note_collection.id
+                assign show_price_note = true
+                break
+              endif
+            endfor
+          endif
+        -%}
+        {%- if show_price_note and section.settings.price_note != blank -%}
+          <p class="product__price-note">{{ section.settings.price_note | escape }}</p>
+        {%- endif -%}
+
         {%- form 'product', product, class: 'product-form', id: 'ProductForm' -%}
           {{ form.errors | default_errors }}
           <input type="hidden" name="id" value="{{ current_variant.id }}" data-variant-id>
@@ -91,6 +108,8 @@
         {%- if product.description != blank -%}
           <div class="product__description rte">{{ product.description }}</div>
         {%- endif -%}
+        {% render 'product-benefits', product: product, section: section %}
+        {% render 'product-details', product: product, section: section %}
       </div>
     </div>
   </div>
@@ -116,6 +135,176 @@
 {% schema %}
 {
   "name": "Product",
-  "settings": []
+  "settings": [
+    {
+      "type": "select",
+      "id": "price_note_scope",
+      "label": "Tax and shipping note visibility",
+      "options": [
+        {
+          "value": "off",
+          "label": "Hidden"
+        },
+        {
+          "value": "collection",
+          "label": "Selected collection only"
+        },
+        {
+          "value": "all",
+          "label": "All products"
+        }
+      ],
+      "default": "collection"
+    },
+    {
+      "type": "collection",
+      "id": "price_note_collection",
+      "label": "Collection for tax and shipping note",
+      "info": "Choose your Aroma Diffusers collection. The note appears only on products in that collection."
+    },
+    {
+      "type": "text",
+      "id": "price_note",
+      "label": "Text below price",
+      "default": "Tax included. Free shipping."
+    },
+    {
+      "type": "header",
+      "content": "Product details accordions"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_product_details",
+      "label": "Show product details accordions",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "details_heading",
+      "label": "Details heading",
+      "default": "Product details"
+    },
+    {
+      "type": "text",
+      "id": "specifications_label",
+      "label": "Specifications label",
+      "default": "Specifications"
+    },
+    {
+      "type": "text",
+      "id": "box_label",
+      "label": "Box contents label",
+      "default": "What?s in the box"
+    },
+    {
+      "type": "checkbox",
+      "id": "details_open_first",
+      "label": "Open first accordion initially",
+      "default": false
+    },
+    {
+      "type": "paragraph",
+      "content": "Product rich text metafields custom.specifications and custom.whats_in_the_box override matching Product details blocks. Empty accordions are hidden."
+    },
+    {
+      "type": "header",
+      "content": "Diffuser benefits"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_product_benefits",
+      "label": "Show benefits row",
+      "default": true
+    },
+    {
+      "type": "collection",
+      "id": "benefits_collection",
+      "label": "Diffuser collection",
+      "info": "Benefits appear only for products in this collection. Select your Aroma Diffusers collection to enable the row."
+    },
+    {
+      "type": "range",
+      "id": "benefits_icon_size",
+      "label": "Icon size",
+      "min": 24,
+      "max": 80,
+      "step": 4,
+      "unit": "px",
+      "default": 36
+    }
+  ],
+  "blocks": [
+    {
+      "type": "product_details",
+      "name": "Product details",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product",
+          "info": "Choose an exact product, or use title keywords below."
+        },
+        {
+          "type": "text",
+          "id": "title_keywords",
+          "label": "Product title keywords",
+          "info": "Comma-separated model names. Matches whole words; ignored when a product is selected."
+        },
+        {
+          "type": "richtext",
+          "id": "specifications",
+          "label": "Specifications"
+        },
+        {
+          "type": "richtext",
+          "id": "box_contents",
+          "label": "What?s in the box"
+        }
+      ]
+    },
+    {
+      "type": "benefit",
+      "name": "Product benefit",
+      "limit": 4,
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Icon image",
+          "info": "A small square image with a transparent background works best."
+        },
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Fallback icon",
+          "options": [
+            {
+              "value": "truck",
+              "label": "Shipping"
+            },
+            {
+              "value": "shield",
+              "label": "Warranty"
+            },
+            {
+              "value": "headset",
+              "label": "Customer service"
+            },
+            {
+              "value": "monitor",
+              "label": "Demo"
+            }
+          ],
+          "default": "shield"
+        },
+        {
+          "type": "text",
+          "id": "text",
+          "label": "Text",
+          "default": "Product benefit"
+        }
+      ]
+    }
+  ]
 }
 {% endschema %}

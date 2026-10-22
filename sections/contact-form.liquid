@@ -6,6 +6,10 @@
         {%- if section.settings.heading != blank -%}<h2 class="contact__title">{{ section.settings.heading }}</h2>{%- endif -%}
         {%- if section.settings.text != blank -%}<p class="contact__intro">{{ section.settings.text }}</p>{%- endif -%}
 
+        {% if section.settings.use_global_contact %}
+          {% render 'contact-details', show_social: section.settings.show_social %}
+        {% endif %}
+
         <ul class="contact__list">
           {%- for block in section.blocks -%}
             <li class="contact__item" {{ block.shopify_attributes }}>
@@ -122,6 +126,8 @@
 {
   "name": "Contact form",
   "settings": [
+    { "type": "checkbox", "id": "use_global_contact", "label": "Show theme contact details", "default": true },
+    { "type": "checkbox", "id": "show_social", "label": "Show social links", "default": true },
     {
       "type": "text",
       "id": "eyebrow",

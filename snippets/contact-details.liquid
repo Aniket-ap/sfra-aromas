@@ -1,0 +1,31 @@
+<div class="contact-details">
+  {% if settings.contact_phone != blank %}
+    <p><a href="tel:{{ settings.contact_phone | remove: ' ' | escape }}">{{ settings.contact_phone | escape }}</a></p>
+  {% endif %}
+  {% if settings.contact_email != blank %}
+    <p><a href="mailto:{{ settings.contact_email | escape }}">{{ settings.contact_email | escape }}</a></p>
+  {% endif %}
+  {% if settings.contact_address != blank %}
+    <div class="contact-details__group">
+      {% if settings.contact_address_label != blank %}<p class="contact-details__label">{{ settings.contact_address_label | escape }}</p>{% endif %}
+      <address>{{ settings.contact_address | escape | newline_to_br }}</address>
+    </div>
+  {% endif %}
+  {% if settings.contact_gst != blank %}<p class="contact-details__group">GST: {{ settings.contact_gst | escape }}</p>{% endif %}
+  {% if settings.contact_hours != blank %}
+    <div class="contact-details__group">
+      {% if settings.contact_hours_label != blank %}<p class="contact-details__label">{{ settings.contact_hours_label | escape }}</p>{% endif %}
+      <p>{{ settings.contact_hours | escape | newline_to_br }}</p>
+    </div>
+  {% endif %}
+  {% render 'whatsapp-link' %}
+  {% if show_social %}
+    <ul class="social-list">
+      {% assign networks = 'instagram,facebook,linkedin,youtube,x,pinterest' | split: ',' %}
+      {% for network in networks %}
+        {% assign key = 'social_' | append: network %}
+        {% if settings[key] != blank %}<li><a href="{{ settings[key] }}" target="_blank" rel="noopener" aria-label="{{ network | capitalize }}">{% render 'icon', name: network, size: 20 %}</a></li>{% endif %}
+      {% endfor %}
+    </ul>
+  {% endif %}
+</div>

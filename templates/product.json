@@ -2,8 +2,75 @@
   "sections": {
     "main": {
       "type": "main-product",
+      "settings": {},
+      "blocks": {
+        "veldora": {
+          "type": "product_details",
+          "settings": {
+            "title_keywords": "VELDORA",
+            "box_contents": "<ul><li>1 aroma diffuser</li><li>1 C-type USB cable</li><li>1 user manual</li><li>1 aroma oil glass bottle (15 ml)</li></ul>"
+          }
+        },
+        "sense": {
+          "type": "product_details",
+          "settings": {
+            "title_keywords": "SENSE, Aeris, Aeris pro, lumen",
+            "box_contents": "<ul><li>1 SENSE aroma diffuser</li><li>1 Europlug charger</li><li>1 HVAC connecting pipe</li><li>Wall mounting clips and screws</li><li>1 warranty card</li><li>1 user manual</li></ul>"
+          }
+        },
+        "velora": {
+          "type": "product_details",
+          "settings": {
+            "title_keywords": "VELORA",
+            "box_contents": "<ul><li>1 TOWER aroma diffuser</li><li>1 Europlug charger</li><li>1 warranty card</li><li>1 user manual</li><li>800 ml empty oil bottle</li></ul>"
+          }
+        },
+        "shipping": {
+          "type": "benefit",
+          "settings": {
+            "icon": "truck",
+            "text": "Free Shipping"
+          }
+        },
+        "warranty": {
+          "type": "benefit",
+          "settings": {
+            "icon": "shield",
+            "text": "1 Year Warranty"
+          }
+        },
+        "support": {
+          "type": "benefit",
+          "settings": {
+            "icon": "headset",
+            "text": "Expert Customer Service"
+          }
+        },
+        "demo": {
+          "type": "benefit",
+          "settings": {
+            "icon": "monitor",
+            "text": "Free Demo"
+          }
+        }
+      },
+      "block_order": [
+        "veldora",
+        "sense",
+        "velora",
+        "shipping",
+        "warranty",
+        "support",
+        "demo"
+      ]
+    },
+    "suggestions": {
+      "type": "product-suggestions",
       "settings": {}
     }
   },
-  "order": ["main"]
+  "order": [
+    "main",
+    "suggestions"
+  ]
 }

@@ -11,37 +11,8 @@
     },
     "form": {
       "type": "contact-form",
-      "blocks": {
-        "email": {
-          "type": "info",
-          "settings": {
-            "icon": "mail",
-            "title": "Email",
-            "text": "<p>hello@sfraaromas.com</p>"
-          }
-        },
-        "phone": {
-          "type": "info",
-          "settings": {
-            "icon": "phone",
-            "title": "Phone",
-            "text": "<p>+00 000 000 0000</p>"
-          }
-        },
-        "hours": {
-          "type": "info",
-          "settings": {
-            "icon": "clock",
-            "title": "Business hours",
-            "text": "<p>Mon – Fri, 9am – 6pm</p>"
-          }
-        }
-      },
-      "block_order": [
-        "email",
-        "phone",
-        "hours"
-      ],
+      "blocks": {},
+      "block_order": [],
       "settings": {
         "background": "alt",
         "brand_options": "AGENT PROVOCATEUR\nANTONIO BANDERAS\nAmouage\nArabian oud\nAzzaro\nBDK\nBOADICEA\nBond no 9\nBurberry\nBvlgari\nByredo\nCartier\nChanel\nChopard\nComme Des Garcons\nCostume National\nCreed\nD & G\nD Square\nDIOR\nDiptyque\nEncre Noir\nEssential Perfume\nEx Nihilio\nFREDRIC MALLE\nGIORGIO ARMANI\nGiardini Di Toscana\nGivenchy\nGucci\nGuerlain\nHermes\nHugoboss\nINFINI Parfums\nInitio\nJacques Bogart\nJean Paul Gaultier\nJimmy Choo\nJo Malone\nJuliette has a Gun\nJustin Bieber\nKayali\nKenzo\nKilian\nLancome\nLattaffa\nLaura Bigiotti\nLe Labo\nLes Liquides Imaginaires\nLouis Vuitton\nL’Artisan\nMaison Crivelli\nMaison Francis\nMancera\nMarc Antoin\nMemo Paris\nMolecule 1\nMontale\nMontblanc\nNarcisco Rodriguez\nNasamatto\nNemo\nOrto Parisi\nPaco Robanne\nParfum De Marley\nPenhaligon\nPolo Ralph Lauren\nPrada\nRoberto Cavalli\nRoja Dove\nSerge Lutens\nStephen Humbert\nThameen\nThierry Mugler\nTiziana Terenzi\nTomford\nValentino\nVan Cleef\nVersace\nVictor And Ralph\nVictoria Secret\nWidian\nXerjoff\nYSL\nZadig & Voltaire\nZoologist",

@@ -77,5 +77,8 @@
     </main>
 
     {% section 'footer' %}
+    {% if settings.show_floating_whatsapp %}
+      {% render 'whatsapp-link', floating: true %}
+    {% endif %}
   </body>
 </html>

@@ -1,0 +1,28 @@
+{%- liquid
+  assign show_benefits = false
+  assign benefit_blocks = section.blocks | where: 'type', 'benefit'
+  if section.settings.show_product_benefits and section.settings.benefits_collection != blank
+    for product_collection in product.collections
+      if product_collection.id == section.settings.benefits_collection.id
+        assign show_benefits = true
+        break
+      endif
+    endfor
+  endif
+-%}
+{%- if show_benefits and benefit_blocks.size > 0 -%}
+  <ul class="product-benefits" style="--benefit-count: {{ benefit_blocks.size }}; --benefit-icon-size: {{ section.settings.benefits_icon_size }}px;">
+    {%- for block in benefit_blocks -%}
+      <li class="product-benefits__item" {{ block.shopify_attributes }}>
+        <div class="product-benefits__icon">
+          {%- if block.settings.image != blank -%}
+            {{ block.settings.image | image_url: width: 240 | image_tag: loading: 'lazy', widths: '80, 160, 240', sizes: '80px', alt: '' }}
+          {%- else -%}
+            {% render 'icon', name: block.settings.icon, size: section.settings.benefits_icon_size %}
+          {%- endif -%}
+        </div>
+        {% if block.settings.text != blank %}<p>{{ block.settings.text | escape }}</p>{% endif %}
+      </li>
+    {%- endfor -%}
+  </ul>
+{%- endif -%}

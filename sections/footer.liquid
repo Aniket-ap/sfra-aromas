@@ -41,6 +41,10 @@
                 {%- endif -%}
               </ul>
 
+            {%- when 'contact' -%}
+              {% if block.settings.title != blank %}<h3 class="footer__title">{{ block.settings.title | escape }}</h3>{% endif %}
+              {% render 'contact-details', show_social: block.settings.show_social %}
+
             {%- when 'text' -%}
               {%- if block.settings.title != blank -%}<h3 class="footer__title">{{ block.settings.title }}</h3>{%- endif -%}
               <div class="rte footer__text">{{ block.settings.text }}</div>
@@ -100,13 +104,51 @@
   ],
   "blocks": [
     {
+      "type": "contact",
+      "name": "Contact details",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Heading",
+          "default": "Contact"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_social",
+          "label": "Show social links",
+          "default": false
+        }
+      ]
+    },
+    {
       "type": "brand",
       "name": "Brand & social",
       "limit": 1,
       "settings": [
-        { "type": "image_picker", "id": "logo", "label": "Footer logo", "info": "Leave empty to use the logo from Theme settings." },
-        { "type": "range", "id": "logo_width", "min": 60, "max": 320, "step": 10, "unit": "px", "label": "Logo width", "default": 140 },
-        { "type": "checkbox", "id": "logo_original_colors", "label": "Use original logo colors", "default": false },
+        {
+          "type": "image_picker",
+          "id": "logo",
+          "label": "Footer logo",
+          "info": "Leave empty to use the logo from Theme settings."
+        },
+        {
+          "type": "range",
+          "id": "logo_width",
+          "min": 60,
+          "max": 320,
+          "step": 10,
+          "unit": "px",
+          "label": "Logo width",
+          "default": 140
+        },
+        {
+          "type": "checkbox",
+          "id": "logo_original_colors",
+          "label": "Use original logo colors",
+          "default": false
+        },
         {
           "type": "richtext",
           "id": "text",
@@ -188,10 +230,10 @@
         }
       },
       {
-        "type": "text",
+        "type": "contact",
         "settings": {
           "title": "Contact",
-          "text": "<p>hello@sfraaromas.com</p><p>Mon – Fri, 9am – 6pm</p>"
+          "show_social": false
         }
       },
       {

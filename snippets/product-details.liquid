@@ -1,0 +1,61 @@
+{%- if section.settings.show_product_details -%}
+  {%- liquid
+    assign matched_block = nil
+    assign normalized_title = product.title | handleize | prepend: '-' | append: '-'
+    for block in section.blocks
+      if block.type != 'product_details'
+        continue
+      endif
+      if block.settings.product != blank
+        if block.settings.product.id == product.id
+          assign matched_block = block
+          break
+        endif
+      elsif matched_block == nil and block.settings.title_keywords != blank
+        assign keywords = block.settings.title_keywords | split: ','
+        for keyword in keywords
+          assign normalized_keyword = keyword | strip | handleize
+          if normalized_keyword == blank
+            continue
+          endif
+          assign token = normalized_keyword | prepend: '-' | append: '-'
+          if normalized_title contains token
+            assign matched_block = block
+            break
+          endif
+        endfor
+      endif
+    endfor
+  -%}
+  {%- capture specifications -%}
+    {%- if product.metafields.custom.specifications != blank -%}
+      {{ product.metafields.custom.specifications | metafield_tag }}
+    {%- elsif matched_block != nil -%}
+      {{ matched_block.settings.specifications }}
+    {%- endif -%}
+  {%- endcapture -%}
+  {%- capture box_contents -%}
+    {%- if product.metafields.custom.whats_in_the_box != blank -%}
+      {{ product.metafields.custom.whats_in_the_box | metafield_tag }}
+    {%- elsif matched_block != nil -%}
+      {{ matched_block.settings.box_contents }}
+    {%- endif -%}
+  {%- endcapture -%}
+  {%- if specifications != blank or box_contents != blank -%}
+    <div class="product-details"{% if matched_block != nil %} {{ matched_block.shopify_attributes }}{% endif %}>
+      {% if section.settings.details_heading != blank %}<h2 class="product-details__heading">{{ section.settings.details_heading | escape }}</h2>{% endif %}
+      {% if specifications != blank %}
+        <details class="product-details__item"{% if section.settings.details_open_first %} open{% endif %}>
+          <summary>{{ section.settings.specifications_label | escape }} {% render 'icon', name: 'chevron-down', size: 16 %}</summary>
+          <div class="product-details__content rte">{{ specifications }}</div>
+        </details>
+      {% endif %}
+      {% if box_contents != blank %}
+        <details class="product-details__item"{% if specifications == blank and section.settings.details_open_first %} open{% endif %}>
+          <summary>{{ section.settings.box_label | escape }} {% render 'icon', name: 'chevron-down', size: 16 %}</summary>
+          <div class="product-details__content rte">{{ box_contents }}</div>
+        </details>
+      {% endif %}
+    </div>
+  {%- endif -%}
+{%- endif -%}
