@@ -1,23 +1,36 @@
 <div class="contact-details">
+  <dl class="contact-details__list">
   {% if settings.contact_phone != blank %}
-    <p><a href="tel:{{ settings.contact_phone | remove: ' ' | escape }}">{{ settings.contact_phone | escape }}</a></p>
+    <div class="contact-details__group contact-details__group--compact">
+      <dt class="contact-details__label"><span class="contact-details__icon">{% render 'icon', name: 'phone', size: 22 %}</span>{{ settings.contact_phone_label | escape }}</dt>
+      <dd><a href="tel:{{ settings.contact_phone | remove: ' ' | remove: '-' | remove: '(' | remove: ')' | escape }}">{{ settings.contact_phone | escape }}</a></dd>
+    </div>
   {% endif %}
   {% if settings.contact_email != blank %}
-    <p><a href="mailto:{{ settings.contact_email | escape }}">{{ settings.contact_email | escape }}</a></p>
+    <div class="contact-details__group contact-details__group--compact">
+      <dt class="contact-details__label"><span class="contact-details__icon">{% render 'icon', name: 'mail', size: 22 %}</span>{{ settings.contact_email_label | escape }}</dt>
+      <dd><a href="mailto:{{ settings.contact_email | escape }}">{{ settings.contact_email | escape }}</a></dd>
+    </div>
   {% endif %}
   {% if settings.contact_address != blank %}
     <div class="contact-details__group">
-      {% if settings.contact_address_label != blank %}<p class="contact-details__label">{{ settings.contact_address_label | escape }}</p>{% endif %}
-      <address>{{ settings.contact_address | escape | newline_to_br }}</address>
+      <dt class="contact-details__label"><span class="contact-details__icon">{% render 'icon', name: 'pin', size: 22 %}</span>{{ settings.contact_address_label | escape }}</dt>
+      <dd><address>{{ settings.contact_address | escape | newline_to_br }}</address></dd>
     </div>
   {% endif %}
-  {% if settings.contact_gst != blank %}<p class="contact-details__group">GST: {{ settings.contact_gst | escape }}</p>{% endif %}
+  {% if settings.contact_gst != blank %}
+    <div class="contact-details__group">
+      <dt class="contact-details__label"><span class="contact-details__icon">{% render 'icon', name: 'document', size: 22 %}</span>{{ settings.contact_gst_label | escape }}</dt>
+      <dd>{{ settings.contact_gst | escape }}</dd>
+    </div>
+  {% endif %}
   {% if settings.contact_hours != blank %}
     <div class="contact-details__group">
-      {% if settings.contact_hours_label != blank %}<p class="contact-details__label">{{ settings.contact_hours_label | escape }}</p>{% endif %}
-      <p>{{ settings.contact_hours | escape | newline_to_br }}</p>
+      <dt class="contact-details__label"><span class="contact-details__icon">{% render 'icon', name: 'clock', size: 22 %}</span>{{ settings.contact_hours_label | escape }}</dt>
+      <dd>{{ settings.contact_hours | escape | newline_to_br }}</dd>
     </div>
   {% endif %}
+  </dl>
   {% render 'whatsapp-link' %}
   {% if show_social %}
     <ul class="social-list">

@@ -161,7 +161,7 @@
         "type": "text",
         "id": "contact_phone",
         "label": "Phone / WhatsApp display number",
-        "default": "9550850777"
+        "default": "+91-9550850777"
       },
       {
         "type": "text",
@@ -173,7 +173,7 @@
         "type": "text",
         "id": "contact_address_label",
         "label": "Address heading",
-        "default": "Registered office"
+        "default": "Address"
       },
       {
         "type": "text",
@@ -197,7 +197,7 @@
         "type": "textarea",
         "id": "contact_address",
         "label": "Address",
-        "default": "32-124, HAL COLONY,\nJEEDIMETLA\nHYDERABAD - 500055"
+        "default": "32-124, HAL COLONY,\nJEEDIMETLA, HYDERABAD - 500055"
       },
       {
         "type": "textarea",
@@ -234,16 +234,22 @@
         "default": "right"
       },
       {
-        "type": "color",
-        "id": "whatsapp_color",
-        "label": "WhatsApp button background",
-        "default": "#128c7e"
+        "type": "text",
+        "id": "contact_phone_label",
+        "label": "Phone heading",
+        "default": "Phone"
       },
       {
-        "type": "color",
-        "id": "whatsapp_text_color",
-        "label": "WhatsApp button text",
-        "default": "#ffffff"
+        "type": "text",
+        "id": "contact_email_label",
+        "label": "Email heading",
+        "default": "Email"
+      },
+      {
+        "type": "text",
+        "id": "contact_gst_label",
+        "label": "GST heading",
+        "default": "GST"
       }
     ]
   },

@@ -3,6 +3,8 @@
 {%- endcomment -%}
 <svg class="icon icon-{{ name }}" xmlns="http://www.w3.org/2000/svg" width="{{ size | default: 20 }}" height="{{ size | default: 20 }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
   {%- case name -%}
+    {%- when 'document' -%}
+      <path d="M14 2H5v20h14V7Z M14 2v5h5M8 11h8M8 15h8M8 18h5"/>
     {%- when 'truck' -%}
       <path d="M3 5h11v12H3zM14 9h4l3 4v4h-7M14 13h7"/><circle cx="7" cy="18" r="2"/><circle cx="18" cy="18" r="2"/>
     {%- when 'headset' -%}

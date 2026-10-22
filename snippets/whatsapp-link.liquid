@@ -1,7 +1,8 @@
 {%- assign whatsapp_number = settings.contact_whatsapp_number | remove: '+' | remove: ' ' | remove: '-' | remove: '(' | remove: ')' -%}
 {%- if whatsapp_number != blank -%}
-  <a class="whatsapp-link{% if floating %} whatsapp-link--floating whatsapp-link--{{ settings.whatsapp_position }}{% endif %}" href="https://wa.me/{{ whatsapp_number | escape }}?text={{ settings.whatsapp_message | url_encode }}" target="_blank" rel="noopener" aria-label="{{ settings.whatsapp_label | escape }}" style="--whatsapp-bg: {{ settings.whatsapp_color }}; --whatsapp-text: {{ settings.whatsapp_text_color }};">
+  <a class="whatsapp-link{% if floating %} whatsapp-link--floating whatsapp-link--{{ settings.whatsapp_position }}{% endif %}" href="https://wa.me/{{ whatsapp_number | escape }}?text={{ settings.whatsapp_message | url_encode }}" target="_blank" rel="noopener" aria-label="{{ settings.whatsapp_label | escape }}">
     {% render 'icon', name: 'whatsapp', size: 24 %}
     <span>{{ settings.whatsapp_label | escape }}</span>
+    {% unless floating %}{% render 'icon', name: 'arrow', size: 18 %}{% endunless %}
   </a>
 {%- endif -%}
