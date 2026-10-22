@@ -1,0 +1,140 @@
+<section class="section exclusive-oils" style="--pt: 40px; --pb: 64px;">
+  <div class="container">
+    <div class="section-heading section-heading--center">
+      <h1 class="section-heading__title">{{ section.settings.heading | default: collection.title | escape }}</h1>
+      <div class="rte section-heading__text">{{ section.settings.intro }}</div>
+    </div>
+    <div class="exclusive-oils__grid">
+      {% for block in section.blocks %}
+        {% assign form_id = 'OilQuote-' | append: section.id | append: '-' | append: block.id %}
+        <article class="exclusive-oils__card" {{ block.shopify_attributes }}>
+          <div class="exclusive-oils__image">
+            {% if block.settings.image != blank %}
+              {{ block.settings.image | image_url: width: 1000 | image_tag: loading: 'lazy', widths: '320, 500, 750, 1000', sizes: '(min-width: 990px) 30vw, (min-width: 750px) 45vw, 100vw', alt: block.settings.title }}
+            {% else %}
+              {{ 'product-1' | placeholder_svg_tag: 'placeholder-svg' }}
+            {% endif %}
+          </div>
+          <h2 class="exclusive-oils__title">{{ block.settings.title | escape }}</h2>
+          <div class="exclusive-oils__notes rte">{{ block.settings.notes }}</div>
+          <p class="exclusive-oils__pricing">{{ section.settings.price_label | escape }}</p>
+          {% form 'contact', id: form_id, class: 'exclusive-oils__form' %}
+            <details class="exclusive-oils__quote"{% if form.errors or form.posted_successfully? %} open{% endif %}>
+              <summary class="btn btn--solid">{{ section.settings.quote_label | escape }} {% render 'icon', name: 'plus', size: 16 %}</summary>
+              <div class="exclusive-oils__fields">
+                {% if form.posted_successfully? %}
+                  <p class="form-message form-message--success" role="status">{{ section.settings.success_message | escape }}</p>
+                {% else %}
+                  {% if form.errors %}<div class="form-message form-message--error" role="alert">{{ form.errors | default_errors }}</div>{% endif %}
+                  <input type="hidden" name="contact[Enquiry type]" value="Exclusive aroma oil quote">
+                  <input type="hidden" name="contact[Fragrance]" value="{{ block.settings.title | escape }}">
+                  <p>Quote for <strong>{{ block.settings.title | escape }}</strong></p>
+                  <div class="field">
+                    <label for="{{ form_id }}-name">Full name *</label>
+                    <input id="{{ form_id }}-name" type="text" name="contact[name]" value="{{ form.name | escape }}" autocomplete="name" required>
+                  </div>
+                  <div class="field">
+                    <label for="{{ form_id }}-email">Email *</label>
+                    <input id="{{ form_id }}-email" type="email" name="contact[email]" value="{{ form.email | escape }}" autocomplete="email" required>
+                  </div>
+                  <div class="field">
+                    <label for="{{ form_id }}-phone">Phone</label>
+                    <input id="{{ form_id }}-phone" type="tel" name="contact[phone]" value="{{ form.phone | escape }}" autocomplete="tel">
+                  </div>
+                  <div class="field">
+                    <label for="{{ form_id }}-message">Requirement / quantity *</label>
+                    <textarea id="{{ form_id }}-message" name="contact[body]" rows="3" required>{{ form.body | escape }}</textarea>
+                  </div>
+                  <button type="submit" class="btn btn--solid btn--block">{{ section.settings.submit_label | escape }}</button>
+                {% endif %}
+              </div>
+            </details>
+          {% endform %}
+        </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Exclusive aroma oils",
+  "enabled_on": {
+    "templates": [
+      "collection"
+    ]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Exclusive Aroma Oils"
+    },
+    {
+      "type": "richtext",
+      "id": "intro",
+      "label": "Introduction",
+      "default": "<p>Discover our exclusive fragrances. Contact us for pricing and a recommendation for your space.</p>"
+    },
+    {
+      "type": "text",
+      "id": "price_label",
+      "label": "Pricing message",
+      "default": "Prices on request"
+    },
+    {
+      "type": "text",
+      "id": "quote_label",
+      "label": "Quote button label",
+      "default": "Request a quote"
+    },
+    {
+      "type": "text",
+      "id": "submit_label",
+      "label": "Submit button label",
+      "default": "Send enquiry"
+    },
+    {
+      "type": "text",
+      "id": "success_message",
+      "label": "Success message",
+      "default": "Thank you. Your quote request has been sent. Our team will contact you shortly."
+    },
+    {
+      "type": "paragraph",
+      "content": "Cards are configured using Fragrance blocks; Shopify products are not required. Quote requests use the native Shopify contact form. Verify delivery to your store notification inbox."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "fragrance",
+      "name": "Fragrance",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Name",
+          "default": "Fragrance name"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Product image"
+        },
+        {
+          "type": "richtext",
+          "id": "notes",
+          "label": "Fragrance notes"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 12,
+  "presets": [
+    {
+      "name": "Exclusive aroma oils"
+    }
+  ]
+}
+{% endschema %}

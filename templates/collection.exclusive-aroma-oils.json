@@ -1,0 +1,39 @@
+{
+  "sections": {
+    "main": {
+      "type": "exclusive-aroma-oils",
+      "settings": {},
+      "blocks": {
+        "sencha": {
+          "type": "fragrance",
+          "settings": {
+            "title": "SENCHA STUDIO",
+            "notes": "<p><strong>Top notes:</strong> Orange</p><p><strong>Mid notes:</strong> Rose, jasmine</p><p><strong>Base notes:</strong> Woody notes, ambroxan</p>"
+          }
+        },
+        "cashmere": {
+          "type": "fragrance",
+          "settings": {
+            "title": "CASHMERE LOUNGE",
+            "notes": "<p><strong>Top notes:</strong> Orange</p><p><strong>Mid notes:</strong> Rose, jasmine, heliotrope</p><p><strong>Base notes:</strong> Cedarwood, vetiver, cashmeran</p>"
+          }
+        },
+        "starrywood": {
+          "type": "fragrance",
+          "settings": {
+            "title": "STARRYWOOD LOUNGE",
+            "notes": "<p><strong>Notes:</strong> Jasmine, hay, ambroxan, sandalwood</p>"
+          }
+        }
+      },
+      "block_order": [
+        "sencha",
+        "cashmere",
+        "starrywood"
+      ]
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

@@ -487,6 +487,22 @@ body.search-modal-open { overflow: hidden; }
 .icon--payment { height: 24px; width: auto; }
 
 /* ---- Collection ---- */
+.exclusive-oils__grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px; align-items: start; }
+.exclusive-oils__card { min-width: 0; }
+.exclusive-oils__image { aspect-ratio: 1; background: var(--color-alt-bg); overflow: hidden; border-radius: var(--card-radius); margin-bottom: 24px; }
+.exclusive-oils__image img, .exclusive-oils__image svg { width: 100%; height: 100%; object-fit: contain; }
+.exclusive-oils__image svg { padding: 20%; fill: #aaa; }
+.exclusive-oils__title { font-size: 20px; }
+.exclusive-oils__notes { margin-block: 16px; color: var(--color-muted); overflow-wrap: anywhere; }
+.exclusive-oils__notes p { margin-bottom: 8px; }
+.exclusive-oils__pricing { font-weight: 600; margin-block: 20px; }
+.exclusive-oils__quote summary { display: flex; align-items: center; justify-content: center; gap: 12px; list-style: none; cursor: pointer; }
+.exclusive-oils__quote summary::-webkit-details-marker { display: none; }
+.exclusive-oils__quote[open] summary .icon { transform: rotate(45deg); }
+.exclusive-oils__fields { padding-top: 24px; }
+@media (min-width: 750px) and (max-width: 989px) { .exclusive-oils__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px 24px; } }
+@media (max-width: 749px) { .exclusive-oils__grid { grid-template-columns: 1fr; gap: 40px; } }
+
 .collection-toolbar { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 32px; padding-bottom: 20px; border-bottom: 1px solid var(--color-border); }
 .filters { display: flex; flex-wrap: wrap; gap: 12px; }
 .filter { position: relative; }
