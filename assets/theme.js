@@ -3,6 +3,56 @@
   'use strict';
 
   function initTheme(root) {
+    root.querySelectorAll('[data-oil-quotes]').forEach(function (section) {
+      if (section.sfraOilQuotes) return;
+      var dialog = section.querySelector('[data-oil-dialog]');
+      if (!dialog || typeof dialog.showModal !== 'function') return;
+      section.sfraOilQuotes = true;
+      var form = section.querySelector('.exclusive-oils__form');
+      var host = section.querySelector('[data-oil-form-host]');
+      var select = form.querySelector('[data-oil-fragrance]');
+      var trigger;
+      var storageKey = 'sfra-oil-quote-' + dialog.id;
+      dialog.querySelector('[data-oil-modal-content]').appendChild(form);
+      host.hidden = true;
+      function open() {
+        if (!dialog.open) dialog.showModal();
+        document.body.classList.add('oil-quote-open');
+        var feedback = form.querySelector('[data-oil-feedback]');
+        if (feedback) feedback.focus();
+      }
+      section.querySelectorAll('[data-oil-quote-open]').forEach(function (button) {
+        button.addEventListener('click', function (event) {
+          event.preventDefault();
+          trigger = button;
+          if (select) Array.from(select.options).forEach(function (option) {
+            if (option.dataset.blockId === button.dataset.fragrance) select.value = option.value;
+          });
+          open();
+        });
+      });
+      dialog.querySelector('[data-oil-close]').addEventListener('click', function () { dialog.close(); });
+      dialog.addEventListener('click', function (event) {
+        if (event.target !== dialog) return;
+        var bounds = dialog.getBoundingClientRect();
+        if (event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom) dialog.close();
+      });
+      dialog.addEventListener('close', function () {
+        document.body.classList.remove('oil-quote-open');
+        if (trigger && trigger.isConnected) trigger.focus();
+      });
+      form.addEventListener('submit', function () {
+        try { if (select) sessionStorage.setItem(storageKey, select.value); } catch (error) { /* Storage may be unavailable. */ }
+      });
+      if (form.querySelector('[data-oil-feedback]')) {
+        try {
+          var fragrance = sessionStorage.getItem(storageKey);
+          if (select && fragrance) select.value = fragrance;
+          sessionStorage.removeItem(storageKey);
+        } catch (error) { /* Native form feedback still works without storage. */ }
+        open();
+      }
+    });
     var stickyHeader = root.querySelector('.site-header.is-sticky');
     if (stickyHeader && !stickyHeader.sfraSizeObserver && typeof ResizeObserver !== 'undefined') {
       stickyHeader.sfraSizeObserver = new ResizeObserver(function () {
@@ -505,6 +555,9 @@
     initTheme(event.target);
   });
   document.addEventListener('shopify:section:unload', function (event) {
+    event.target.querySelectorAll('[data-oil-dialog]').forEach(function (dialog) {
+      if (dialog.open) dialog.close();
+    });
     event.target.querySelectorAll('[data-hero]').forEach(function (hero) {
       if (hero.sfraHero) hero.sfraHero.stop();
     });
