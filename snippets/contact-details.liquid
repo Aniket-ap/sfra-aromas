@@ -1,13 +1,13 @@
 <div class="contact-details">
   <dl class="contact-details__list">
   {% if settings.contact_phone != blank %}
-    <div class="contact-details__group contact-details__group--compact">
+    <div class="contact-details__group">
       <dt class="contact-details__label"><span class="contact-details__icon">{% render 'icon', name: 'phone', size: 22 %}</span>{{ settings.contact_phone_label | escape }}</dt>
       <dd><a href="tel:{{ settings.contact_phone | remove: ' ' | remove: '-' | remove: '(' | remove: ')' | escape }}">{{ settings.contact_phone | escape }}</a></dd>
     </div>
   {% endif %}
   {% if settings.contact_email != blank %}
-    <div class="contact-details__group contact-details__group--compact">
+    <div class="contact-details__group">
       <dt class="contact-details__label"><span class="contact-details__icon">{% render 'icon', name: 'mail', size: 22 %}</span>{{ settings.contact_email_label | escape }}</dt>
       <dd><a href="mailto:{{ settings.contact_email | escape }}">{{ settings.contact_email | escape }}</a></dd>
     </div>

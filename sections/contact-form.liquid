@@ -3,6 +3,7 @@
     <div class="contact">
       <div class="contact__info">
         {% if section.settings.use_global_contact %}
+          {%- if section.settings.details_heading != blank -%}<h2 class="contact__title">{{ section.settings.details_heading | escape }}</h2>{%- endif -%}
           {% render 'contact-details', show_social: section.settings.show_social %}
         {% endif %}
 
@@ -129,6 +130,7 @@
   "name": "Contact form",
   "settings": [
     { "type": "checkbox", "id": "use_global_contact", "label": "Show theme contact details", "default": true },
+    { "type": "text", "id": "details_heading", "label": "Contact details heading", "default": "Reach Us" },
     { "type": "checkbox", "id": "show_social", "label": "Show social links", "default": true },
     {
       "type": "text",
