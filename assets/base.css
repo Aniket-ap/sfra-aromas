@@ -408,6 +408,7 @@ body.search-modal-open { overflow: hidden; }
 .contact__item { display: flex; gap: 16px; align-items: flex-start; }
 .contact__icon { display: inline-flex; width: 44px; height: 44px; align-items: center; justify-content: center; background: #fff; border: 1px solid var(--color-border); flex-shrink: 0; }
 .contact__item-title { font-size: 12px; letter-spacing: .16em; text-transform: uppercase; font-weight: 600; margin: 0 0 4px; color: var(--color-muted); }
+.contact__form-col { min-width: 0; }
 .contact__form-wrap { background: #fff; border: 1px solid var(--color-border); padding: 32px; color: var(--color-text); }
 @media (max-width: 749px) { .contact__form-wrap { padding: 22px; } }
 
@@ -489,6 +490,7 @@ body.search-modal-open { overflow: hidden; }
   margin: 0;
 }
 .footer__bottom-brand { justify-self: start; }
+.footer__bottom-brand a:hover { color: #fff; text-decoration: underline; }
 .footer__bottom-copy { justify-self: center; text-align: center; }
 .footer__bottom-extra { justify-self: end; text-align: right; }
 .payment-icons { display: flex; flex-wrap: wrap; gap: 8px; justify-self: end; }
@@ -567,8 +569,8 @@ a.pagination__link:hover, .pagination__link.is-current { background: var(--color
 .product__title { font-size: calc(clamp(26px, 3.5vw, 38px) * var(--heading-scale)); }
 .product__price { font-size: 22px; margin-bottom: 28px; }
 .product__price s { color: var(--color-muted); font-size: 17px; margin-right: 10px; }
-.product__price:has(+ .product__price-note) { margin-bottom: 6px; }
-.product__price-note { color: var(--color-muted); font-size: 13px; margin: 0 0 28px; }
+.product__price:has(+ .product__price-note) { margin-bottom: 10px; }
+.product__price-note { width: fit-content; padding: 6px 12px; background: var(--color-alt-bg); color: var(--color-text); font-size: 14px; font-weight: 600; margin: 0 0 28px; }
 .product__description { margin-top: 36px; padding-top: 28px; border-top: 1px solid var(--color-border); color: var(--color-muted); }
 .product__actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; max-width: 440px; }
 .product__actions .btn { width: 100%; min-height: 46px; padding: 13px 12px; font-size: 12px; letter-spacing: .1em; }
@@ -589,7 +591,8 @@ a.pagination__link:hover, .pagination__link.is-current { background: var(--color
 
 
 /* ---- Cart ---- */
-.product-benefits { display: grid; grid-template-columns: repeat(var(--benefit-count, 4), minmax(0, 1fr)); gap: 12px; margin-top: 20px; padding: 18px 0; border-bottom: 1px solid var(--color-border); }
+.product-benefits { display: grid; grid-template-columns: repeat(var(--benefit-count, 4), minmax(0, 1fr)); gap: 12px; margin-top: 24px; padding: 18px 12px; background: var(--color-alt-bg); border-radius: var(--card-radius); }
+.product-benefits + .product__description { margin-top: 28px; padding-top: 0; border-top: 0; }
 .product-benefits__item { text-align: center; min-width: 0; }
 .product-benefits__icon { display: flex; justify-content: center; align-items: center; height: var(--benefit-icon-size, 36px); margin-bottom: 16px; }
 .product-benefits__icon img, .product-benefits__icon svg { width: var(--benefit-icon-size, 36px); height: var(--benefit-icon-size, 36px); object-fit: contain; }

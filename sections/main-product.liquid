@@ -105,10 +105,10 @@
           </div>
         {%- endform -%}
 
+        {% render 'product-benefits', product: product, section: section %}
         {%- if product.description != blank -%}
           <div class="product__description rte">{{ product.description }}</div>
         {%- endif -%}
-        {% render 'product-benefits', product: product, section: section %}
         {% render 'product-details', product: product, section: section %}
       </div>
     </div>
@@ -166,7 +166,7 @@
       "type": "text",
       "id": "price_note",
       "label": "Text below price",
-      "default": "Tax included. Free shipping."
+      "default": "Including Taxes. Free Shipping."
     },
     {
       "type": "header",
@@ -320,6 +320,10 @@
             {
               "value": "monitor",
               "label": "Demo"
+            },
+            {
+              "value": "return",
+              "label": "Returns"
             }
           ],
           "default": "shield"
